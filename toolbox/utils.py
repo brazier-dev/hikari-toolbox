@@ -328,7 +328,7 @@ async def fetch_from_message_link(message_link: str, *, bot: hikari.RESTAware) -
 
     _, channel_id, message_id = message_link.split("/channels/")[1].split("/")
 
-    return await bot.rest.fetch_message(channel_id, message_id)
+    return await bot.rest.fetch_message(int(channel_id), int(message_id))
 
 
 # MIT License
