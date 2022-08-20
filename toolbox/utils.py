@@ -14,7 +14,7 @@ __all__: t.Sequence[str] = (
     "is_above",
     "is_url",
     "is_invite",
-    "fetch_from_message_link",
+    "fetch_message_from_link",
     "calculate_permissions",
     "can_moderate",
 )
@@ -252,7 +252,7 @@ def can_moderate(
 
 def is_url(string: str, *, fullmatch: bool = True) -> bool:
     """
-    Returns True if the provided string is an URL, otherwise False.
+    Returns True if the provided string is a valid http URL, otherwise False.
 
     Parameters
     ----------
@@ -300,7 +300,7 @@ def is_invite(string: str, *, fullmatch: bool = True) -> bool:
     return False
 
 
-async def fetch_from_message_link(message_link: str, *, bot: hikari.RESTAware) -> hikari.Message:
+async def fetch_message_from_link(message_link: str, *, bot: hikari.RESTAware) -> hikari.Message:
     """Parse a message_link string into a message object.
 
     Parameters
