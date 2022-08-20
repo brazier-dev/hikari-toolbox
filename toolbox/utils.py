@@ -6,6 +6,19 @@ import hikari
 
 from .errors import CacheFailureError
 
+__all__: t.Sequence[str] = (
+    "format_dt",
+    "utcnow",
+    "get_member_color",
+    "sort_roles",
+    "is_above",
+    "is_url",
+    "is_invite",
+    "fetch_from_message_link",
+    "calculate_permissions",
+    "can_moderate",
+)
+
 VALID_TIMESTAMP_STYLES: t.Sequence[str] = ("t", "T", "d", "D", "f", "F", "R")
 
 MESSAGE_LINK_REGEX = re.compile(
@@ -170,7 +183,7 @@ def calculate_permissions(member: hikari.Member, channel: t.Optional[hikari.Guil
     permissions &= overwrite_everyone.deny
     permissions |= overwrite_everyone.allow
 
-    overwrites = hikari.PermissionOverwrite( # Collect role overwrites here
+    overwrites = hikari.PermissionOverwrite(  # Collect role overwrites here
         id=hikari.Snowflake(69),
         type=hikari.PermissionOverwriteType.ROLE,
         allow=hikari.Permissions.NONE,
@@ -318,3 +331,26 @@ async def fetch_from_message_link(message_link: str, *, bot: hikari.RESTAware) -
     message_id = hikari.Snowflake(snowflakes[2])
 
     return await bot.rest.fetch_message(channel_id, message_id)
+
+
+# MIT License
+#
+# Copyright (c) 2022-present HyperGH
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
