@@ -326,11 +326,9 @@ async def fetch_message_from_link(message_link: str, *, bot: hikari.RESTAware) -
             "Invalid message link provided, should match the following regex: " + MESSAGE_LINK_REGEX.pattern
         )
 
-    snowflakes = message_link.split("/channels/")[1].split("/")
-    channel_id = hikari.Snowflake(snowflakes[1])
-    message_id = hikari.Snowflake(snowflakes[2])
+    _, channel_id, message_id = message_link.split("/channels/")[1].split("/")
 
-    return await bot.rest.fetch_message(channel_id, message_id)
+    return await bot.rest.fetch_message(int(channel_id), int(message_id))
 
 
 # MIT License
