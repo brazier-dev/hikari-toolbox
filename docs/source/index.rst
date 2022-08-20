@@ -5,6 +5,8 @@ A set of utilities for use with `Hikari <https://github.com/hikari-py/hikari>`_
 
 Repository: `View on GitHub <https://github.com/HyperGH/hikari-toolbox>`_
 
+PyPi: `View <https://pypi.org/project/hikari-toolbox/>`_
+
 If you need any help with this library or hikari, please do not hesitate to join the `Hikari Discord <https://discord.gg/Jx4cNGG>`_
 
 Helpful Resources:
