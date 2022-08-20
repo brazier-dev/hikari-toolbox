@@ -1,2 +1,2 @@
-# hikari-utils
+# hikari-toolbox
 Utility functions for hikari, a Discord API wrapper.
