@@ -435,7 +435,7 @@ def as_command_choices(*args: t.Any, **kwargs: t.Any) -> t.Sequence[hikari.Comma
     if len(args) != 1:
         return _list_to_command_choices(args)
 
-    choices = args[0]
+    (choices,) = args
 
     if isinstance(choices, dict):
         return _dict_to_command_choices(choices)
