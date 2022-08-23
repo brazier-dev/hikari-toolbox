@@ -386,6 +386,27 @@ def as_command_choices(**kwargs: ChoiceTypes) -> t.Sequence[hikari.CommandChoice
 
 
 def as_command_choices(*args: t.Any, **kwargs: t.Any) -> t.Sequence[hikari.CommandChoice]:
+    """
+    Conver the arguments to `typing.Sequence[hikari.CommandChoice]`.
+
+    The following inputs return
+    `(CommandChoice(name='a', value='a'), CommandChoice(name='b', value='b'), CommandChoice(name='c', value='c'))`
+
+    .. code-block:: python
+
+        toolbox.as_command_choices(["a", "b", "c"])
+
+        toolbox.as_command_choices([["a", "d"], ["b", "e"], ["c", "f"]])
+
+        toolbox.as_command_choices({"a": "e", "b": "f", "c": "g"})
+
+        toolbox.as_command_choices("a", "b", "c")
+
+        toolbox.as_command_choices(["a", "e"], ["b", "f"], ["c", "g"])
+
+        toolbox.as_command_choices(a="e", b="f", c="g")
+
+    """
     if len(args) != 1:
         if kwargs:
             return _dict_to_command_choices(kwargs)
