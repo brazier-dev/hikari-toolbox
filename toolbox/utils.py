@@ -429,9 +429,10 @@ def as_command_choices(*args: t.Any, **kwargs: t.Any) -> t.Sequence[hikari.Comma
         The generated `hikari.CommandChoice` objects.
 
     """
+    if kwargs:
+        return _dict_to_command_choices(kwargs)
+
     if len(args) != 1:
-        if kwargs:
-            return _dict_to_command_choices(kwargs)
         return _list_to_command_choices(args)
 
     choices = args[0]
