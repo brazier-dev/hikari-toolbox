@@ -389,22 +389,37 @@ def as_command_choices(*args: t.Any, **kwargs: t.Any) -> t.Sequence[hikari.Comma
     """
     Conver the arguments to `typing.Sequence[hikari.CommandChoice]`.
 
-    The following inputs return
-    `(CommandChoice(name='a', value='a'), CommandChoice(name='b', value='b'), CommandChoice(name='c', value='c'))`
+    Parameters
+    ----------
+    *args : typing.Union[str, int, float] or typing.Sequence[typing.Union[str, int, float]] or dict[str, typing.Union[str, int, float]], optional
+        The parameters to make the `typing.Sequence[CommandChoice]` with with.
 
-    .. code-block:: python
+        *args can be provided in any of the following ways:
 
-        toolbox.as_command_choices(["a", "b", "c"])
+        .. code-block:: python
+            # Returns `(CommandChoice(name='a', value='a'), CommandChoice(name='b', value='b'), CommandChoice(name='c', value='c'))`
+            toolbox.as_command_choices(["a", "b", "c"])
 
-        toolbox.as_command_choices([["a", "d"], ["b", "e"], ["c", "f"]])
+            toolbox.as_command_choices("a", "b", "c")
 
-        toolbox.as_command_choices({"a": "e", "b": "f", "c": "g"})
+            # Returns `(CommandChoice(name='a', value='e'), CommandChoice(name='b', value='f'), CommandChoice(name='c', value='g'))`
+            toolbox.as_command_choices([["a", "d"], ["b", "e"], ["c", "f"]])
 
-        toolbox.as_command_choices("a", "b", "c")
+            toolbox.as_command_choices({"a": "e", "b": "f", "c": "g"})
 
-        toolbox.as_command_choices(["a", "e"], ["b", "f"], ["c", "g"])
+            toolbox.as_command_choices(["a", "e"], ["b", "f"], ["c", "g"])
 
-        toolbox.as_command_choices(a="e", b="f", c="g")
+    **kwargs : str, optional
+        If provided, use kwargs as the (name, value) for each `hikari.Commandchoice`.
+
+        .. code-block:: python
+            # Returns `(CommandChoice(name='a', value='e'), CommandChoice(name='b', value='f'), CommandChoice(name='c', value='g'))`
+            toolbox.as_command_choices(a="e", b="f", c="g")
+
+    Returns
+    -------
+    typing.Sequence[hikari.CommandChoice]
+        The generated `hikari.CommandChoice` objects.
 
     """
     if len(args) != 1:
