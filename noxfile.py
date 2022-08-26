@@ -36,6 +36,7 @@ def mypy(session: nox.Session):
     session.install("-U", "mypy")
     session.run("python", "-m", "mypy", PATH_TO_PROJECT)
 
+
 @nox.session()
 def pytest(session: nox.Session):
     session.install("-Ur", "requirements.txt")
