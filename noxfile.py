@@ -4,6 +4,7 @@ import nox
 from nox import options
 
 PATH_TO_PROJECT = os.path.join(".", "toolbox")
+PATH_TO_TESTS = os.path.join(".", "tests")
 SCRIPT_PATHS = [
     PATH_TO_PROJECT,
     "noxfile.py",
@@ -33,6 +34,12 @@ def mypy(session: nox.Session):
     session.install("-Ur", "requirements.txt")
     session.install("-U", "mypy")
     session.run("python", "-m", "mypy", PATH_TO_PROJECT)
+
+@nox.session()
+def pytest(session: nox.Session):
+    session.install("-Ur", "requirements.txt")
+    session.install("-U", "pytest")
+    session.run("pytest", PATH_TO_TESTS)
 
 
 @nox.session(reuse_venv=True)
