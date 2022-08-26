@@ -7,6 +7,7 @@ PATH_TO_PROJECT = os.path.join(".", "toolbox")
 PATH_TO_TESTS = os.path.join(".", "tests")
 SCRIPT_PATHS = [
     PATH_TO_PROJECT,
+    PATH_TO_TESTS,
     "noxfile.py",
     "docs/source/conf.py",
 ]
