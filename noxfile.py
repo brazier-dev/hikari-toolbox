@@ -40,6 +40,7 @@ def mypy(session: nox.Session):
 @nox.session()
 def pytest(session: nox.Session):
     session.install("-Ur", "requirements.txt")
+    session.install("-U", ".")
     session.install("-U", "pytest")
     session.run("pytest", PATH_TO_TESTS)
 
