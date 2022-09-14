@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import datetime
 import re
 import typing as t
@@ -17,6 +19,7 @@ __all__: t.Sequence[str] = (
     "fetch_message_from_link",
     "calculate_permissions",
     "can_moderate",
+    "as_command_choices",
 )
 
 VALID_TIMESTAMP_STYLES: t.Sequence[str] = ("t", "T", "d", "D", "f", "F", "R")
@@ -329,6 +332,114 @@ async def fetch_message_from_link(message_link: str, *, bot: hikari.RESTAware) -
     _, channel_id, message_id = message_link.split("/channels/")[1].split("/")
 
     return await bot.rest.fetch_message(int(channel_id), int(message_id))
+
+
+ChoiceTypes = t.Union[str, int, float]
+
+
+def _dict_to_command_choices(choices: dict[str, ChoiceTypes]) -> t.Sequence[hikari.CommandChoice]:
+    return tuple(hikari.CommandChoice(name=k, value=v) for k, v in choices.items())
+
+
+def _list_to_command_choices(
+    choices: t.Sequence[ChoiceTypes] | t.Sequence[t.Sequence[ChoiceTypes]],
+) -> t.Sequence[hikari.CommandChoice]:
+    if isinstance(choices[0], list):
+        return tuple(
+            hikari.CommandChoice(name=str(name), value=value)
+            for name, value in t.cast(t.Sequence[t.Sequence[ChoiceTypes]], choices)
+        )
+    else:
+        return tuple(
+            hikari.CommandChoice(name=str(item), value=item) for item in t.cast(t.Sequence[ChoiceTypes], choices)
+        )
+
+
+@t.overload
+def as_command_choices(choices: t.Sequence[ChoiceTypes]) -> t.Sequence[hikari.CommandChoice]:
+    ...
+
+
+@t.overload
+def as_command_choices(choices: t.Sequence[t.Sequence[ChoiceTypes]]) -> t.Sequence[hikari.CommandChoice]:
+    ...
+
+
+@t.overload
+def as_command_choices(choices: dict[str, ChoiceTypes]) -> t.Sequence[hikari.CommandChoice]:
+    ...
+
+
+@t.overload
+def as_command_choices(*args: ChoiceTypes) -> t.Sequence[hikari.CommandChoice]:
+    ...
+
+
+@t.overload
+def as_command_choices(*args: t.Sequence[ChoiceTypes]) -> t.Sequence[hikari.CommandChoice]:
+    ...
+
+
+@t.overload
+def as_command_choices(**kwargs: ChoiceTypes) -> t.Sequence[hikari.CommandChoice]:
+    ...
+
+
+def as_command_choices(*args: t.Any, **kwargs: t.Any) -> t.Sequence[hikari.CommandChoice]:
+    """Convert the arguments to `typing.Sequence[hikari.CommandChoice]`.
+
+    Parameters
+    ----------
+    choices : typing.Sequence[typing.Union[str, int, float]] or typing.Sequence[typing.Sequence[typing.Union[str, int, float]]] or dict[str, typing.Union[str, int, float]]
+        A sequence or dict to use to generate the `typing.Sequence[hikari.CommandChoice]`.
+
+        .. code-block:: python
+
+            # Returns `(CommandChoice(name='a', value='a'), CommandChoice(name='b', value='b'), CommandChoice(name='c', value='c'))`
+            toolbox.as_command_choices(["a", "b", "c"])
+
+            # Returns `(CommandChoice(name='a', value='e'), CommandChoice(name='b', value='f'), CommandChoice(name='c', value='g'))`
+            toolbox.as_command_choices({"a": "e", "b": "f", "c": "g"})
+            toolbox.as_command_choices([["a", "d"], ["b", "e"], ["c", "f"]])
+
+    *args : typing.Union[str, int, float] or typing.Sequence[typing.Union[str, int, float]], optional
+        The parameters to make the `typing.Sequence[CommandChoice]` with with.
+
+        \*args can be provided in any of the following ways:
+
+        .. code-block:: python
+
+            # Returns `(CommandChoice(name='a', value='a'), CommandChoice(name='b', value='b'), CommandChoice(name='c', value='c'))`
+            toolbox.as_command_choices("a", "b", "c")
+
+            # Returns `(CommandChoice(name='a', value='e'), CommandChoice(name='b', value='f'), CommandChoice(name='c', value='g'))`
+            toolbox.as_command_choices(["a", "e"], ["b", "f"], ["c", "g"])
+
+    **kwargs : str, optional
+        If provided, use kwargs as the (name, value) for each `hikari.Commandchoice`.
+
+        .. code-block:: python
+
+            # Returns `(CommandChoice(name='a', value='e'), CommandChoice(name='b', value='f'), CommandChoice(name='c', value='g'))`
+            toolbox.as_command_choices(a="e", b="f", c="g")
+
+    Returns
+    -------
+    typing.Sequence[hikari.CommandChoice]
+        The generated `hikari.CommandChoice` objects.
+
+    """
+    if kwargs:
+        return _dict_to_command_choices(kwargs)
+
+    if len(args) != 1:
+        return _list_to_command_choices(args)
+
+    (choices,) = args
+
+    if isinstance(choices, dict):
+        return _dict_to_command_choices(choices)
+    return _list_to_command_choices(choices)
 
 
 # MIT License
