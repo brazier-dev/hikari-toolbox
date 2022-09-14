@@ -20,6 +20,7 @@ __all__: t.Sequence[str] = (
     "calculate_permissions",
     "can_moderate",
     "as_command_choices",
+    "remove_md",
 )
 
 VALID_TIMESTAMP_STYLES: t.Sequence[str] = ("t", "T", "d", "D", "f", "F", "R")
@@ -31,6 +32,8 @@ LINK_REGEX = re.compile(
     r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)"
 )
 INVITE_REGEX = re.compile(r"(?:https?://)?discord(?:app)?\.(?:com/invite|gg)/[a-zA-Z0-9]+/?")
+
+MD_REGEX = re.compile(r"`{3}([\S\s]*?)`{3}|`([^`]*)`|~~([\S\s]*?)~~|\*{2}([\s\S]*?)\*{2}(?!\*)|\*([^*]*)\*|__([\s\S]*?)__|^>>>([\s\S]*?)|^>([\s\S]*?)")
 
 
 def format_dt(time: datetime.datetime, style: t.Optional[str] = None) -> str:
@@ -442,6 +445,22 @@ def as_command_choices(*args: t.Any, **kwargs: t.Any) -> t.Sequence[hikari.Comma
     return _list_to_command_choices(choices)
 
 
+def remove_md(message: hikari.Message) -> str:
+    """Removes the markdown formatting from discord messages.
+    
+    Parameters
+    ----------
+    message : hikari.Message
+        The `hikari.Message` object, which needs their `content` cleaned from discord's markdown formatting.
+
+    Returns
+    -------
+    str
+        The `hikari.Message.content` string without markdown formatting.
+    """
+    if message.content is None:
+        return "Message is empty"
+    
 # MIT License
 #
 # Copyright (c) 2022-present HyperGH
