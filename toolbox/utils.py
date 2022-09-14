@@ -180,7 +180,7 @@ def calculate_permissions(member: hikari.Member, channel: t.Optional[hikari.Guil
 
     overwrite_everyone = channel.permission_overwrites.get(channel.guild_id)
     assert overwrite_everyone is not None
-    permissions &= overwrite_everyone.deny
+    permissions &= ~overwrite_everyone.deny
     permissions |= overwrite_everyone.allow
 
     overwrites = hikari.PermissionOverwrite(  # Collect role overwrites here
