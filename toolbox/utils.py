@@ -12,6 +12,7 @@ __all__: t.Sequence[str] = (
     "format_dt",
     "utcnow",
     "get_member_color",
+    "get_user_possessive",
     "sort_roles",
     "is_above",
     "is_url",
@@ -96,7 +97,7 @@ def get_member_color(member: hikari.Member) -> hikari.Color:
     return hikari.Color(0)
 
 
-def get_member_possessive(user: t.Union[hikari.User, hikari.Member]) -> str:
+def get_user_possessive(user: t.Union[hikari.User, hikari.Member]) -> str:
     """Returns the possessive noun of a user or a member.
 
     If a `Member` is passed, the display name is used to form the
