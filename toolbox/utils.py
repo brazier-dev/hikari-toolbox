@@ -96,6 +96,27 @@ def get_member_color(member: hikari.Member) -> hikari.Color:
     return hikari.Color(0)
 
 
+def get_member_possessive(user: t.Union[hikari.User, hikari.Member]) -> str:
+    """Returns the possessive noun of a user or a member.
+
+    If a `Member` is passed, the display name is used to form the
+    possessive noun, where possible. In all other situations, the
+    username is used instead.
+
+    Parameters
+    ----------
+    user : Optional[hikari.User, hikari.Member]
+        The user or member to get the possessive noun of.
+
+    Returns
+    -------
+    str
+        The possessive noun of the user or member.
+    """
+    name = getattr(user, "display_name", user.username)
+    return f"{name}'{'s' if not name.endswith('s') else ''}"
+
+
 def sort_roles(roles: t.Sequence[hikari.Role], ascending: bool = False) -> t.Sequence[hikari.Role]:
     """Sort a list of roles based on position. By default it is in a descending order.
 
