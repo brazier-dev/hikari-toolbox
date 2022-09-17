@@ -12,7 +12,7 @@ SCRIPT_PATHS = [
     "docs/source/conf.py",
 ]
 
-options.sessions = ["format_fix", "mypy", "sphinx"]
+options.sessions = ["format_fix", "mypy", "pytest", "sphinx"]
 
 
 @nox.session()
