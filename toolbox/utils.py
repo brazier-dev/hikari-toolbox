@@ -26,6 +26,7 @@ __all__: t.Sequence[str] = (
     "remove_code_block",
     "remove_multi_code_block",
     "remove_bold",
+    "remove_underline",
 )
 
 VALID_TIMESTAMP_STYLES: t.Sequence[str] = ("t", "T", "d", "D", "f", "F", "R")
@@ -569,48 +570,30 @@ def remove_bold(content: str) -> str:
     matches = re.findall(BOLD_REGEX, content)
     if not matches:
         return content
-    cleaned = re.sub("\*\*", "", content, len(matches) * 2)
+    cleaned = re.sub(r"\*\*", "", content, len(matches) * 2)
     return cleaned
 
-# def remove_strikethrough(content: str) -> str:
-#     """Removes the strikethrough formatting from discord messages.
 
-#     Parameters
-#     ----------
-#     content : str
-#         The `str` object to be cleaned from strikethrough.
+def remove_underline(content: str) -> str:
+    """Removes the underlining from discord messages.
 
-#     Returns
-#     -------
-#     str
-#         The `cleaned` string without strikethrough formatting.
-#     """
-#     cleaned = ""
-#     matches = re.findall(STRIKETHROUGH, content)
-#     if not matches:
-#         return content
-#     cleaned = re.sub("~~", "", content, len(matches) * 2)
-#     return cleaned
+    Parameters
+    ----------
+    content : str
+        The `str` object to be cleaned from underlining.
 
-# def remove_strikethrough(content: str) -> str:
-#     """Removes the strikethrough formatting from discord messages.
+    Returns
+    -------
+    str
+        The `cleaned` string without underlining.
+    """
+    cleaned = ""
+    matches = re.findall(UNDERLINE_REGEX, content)
+    if not matches:
+        return content
+    cleaned = re.sub("__", "", content, len(matches) * 2)
+    return cleaned
 
-#     Parameters
-#     ----------
-#     content : str
-#         The `str` object to be cleaned from strikethrough.
-
-#     Returns
-#     -------
-#     str
-#         The `cleaned` string without strikethrough formatting.
-#     """
-#     cleaned = ""
-#     matches = re.findall(STRIKETHROUGH, content)
-#     if not matches:
-#         return content
-#     cleaned = re.sub("~~", "", content, len(matches) * 2)
-#     return cleaned
 
 # def remove_strikethrough(content: str) -> str:
 #     """Removes the strikethrough formatting from discord messages.
@@ -631,6 +614,28 @@ def remove_bold(content: str) -> str:
 #         return content
 #     cleaned = re.sub("~~", "", content, len(matches) * 2)
 #     return cleaned
+
+
+# def remove_strikethrough(content: str) -> str:
+#     """Removes the strikethrough formatting from discord messages.
+
+#     Parameters
+#     ----------
+#     content : str
+#         The `str` object to be cleaned from strikethrough.
+
+#     Returns
+#     -------
+#     str
+#         The `cleaned` string without strikethrough formatting.
+#     """
+#     cleaned = ""
+#     matches = re.findall(STRIKETHROUGH, content)
+#     if not matches:
+#         return content
+#     cleaned = re.sub("~~", "", content, len(matches) * 2)
+#     return cleaned
+
 
 # def remove_strikethrough(content: str) -> str:
 #     """Removes the strikethrough formatting from discord messages.
