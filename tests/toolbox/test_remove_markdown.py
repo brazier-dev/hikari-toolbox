@@ -1,5 +1,4 @@
-from toolbox import remove_strikethrough, remove_code_block, remove_multi_code_block, remove_bold, remove_underline, remove_italic
-
+from toolbox import remove_strikethrough, remove_code_block, remove_multi_code_block, remove_bold, remove_underline, remove_italic_underscore, remove_italic_asterisk
 
 def test_remove_strikethrough():
     assert remove_strikethrough("~~test~~") == "test"
@@ -84,19 +83,37 @@ def test_remove_underline():
     assert remove_underline("__test \nwith line break__") == "test \nwith line break"
 
 
-def test_remove_italic():
-    assert remove_italic("") == ""
-    assert remove_italic("_test_") == "test"
-    assert remove_italic("test") == "test"
-    assert remove_italic("_test") == "_test"
-    assert remove_italic("_test_ _another test_") == "test another test"
-    assert remove_italic("_test_ another test_") == "test another test_"
-    assert remove_italic("_test_ _another test_ _and another one_") == "test another test and another one"
-    assert remove_italic("_test__") == "test_"
-    assert remove_italic("test  __more randomness_") == "test  _more randomness"
-    assert remove_italic("test  _ _more randomness_") == "test   more randomness_"
+def test_remove_italic_underscore():
+    assert remove_italic_underscore("") == ""
+    assert remove_italic_underscore("_test_") == "test"
+    assert remove_italic_underscore("test") == "test"
+    assert remove_italic_underscore("_test") == "_test"
+    assert remove_italic_underscore("_test_ _another test_") == "test another test"
+    assert remove_italic_underscore("_test_ another test_") == "test another test_"
+    assert remove_italic_underscore("_test_ _another test_ _and another one_") == "test another test and another one"
+    assert remove_italic_underscore("_test__") == "test_"
+    assert remove_italic_underscore("test  __more randomness_") == "test  _more randomness"
+    assert remove_italic_underscore("test  _ _more randomness_") == "test   more randomness_"
     assert (
-        remove_italic("_test_ we write some random_ gibberish _hehe _")
+        remove_italic_underscore("_test_ we write some random_ gibberish _hehe _")
         == "test we write some random gibberish hehe _"
     )
-    assert remove_italic("_test \nwith line break_") == "test \nwith line break"
+    assert remove_italic_underscore("_test \nwith line break_") == "test \nwith line break"
+
+
+def test_remove_italic_asterisk():
+    assert remove_italic_asterisk("") == ""
+    assert remove_italic_asterisk("*test*") == "test"
+    assert remove_italic_asterisk("test") == "test"
+    assert remove_italic_asterisk("*test") == "*test"
+    assert remove_italic_asterisk("*test* *another test*") == "test another test"
+    assert remove_italic_asterisk("*test* another test*") == "test another test*"
+    assert remove_italic_asterisk("*test* *another test* *and another one*") == "test another test and another one"
+    assert remove_italic_asterisk("*test**") == "test*"
+    assert remove_italic_asterisk("test  **more randomness*") == "test  *more randomness"
+    assert remove_italic_asterisk("test  * *more randomness*") == "test   more randomness*"
+    assert (
+        remove_italic_asterisk("*test* we write some random* gibberish *hehe *")
+        == "test we write some random gibberish hehe *"
+    )
+    assert remove_italic_asterisk("*test \nwith line break*") == "test \nwith line break"
