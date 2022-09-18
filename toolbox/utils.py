@@ -27,7 +27,8 @@ __all__: t.Sequence[str] = (
     "remove_multi_code_block",
     "remove_bold",
     "remove_underline",
-    "remove_italic",
+    "remove_italic_underscore",
+    "remove_italic_asterisk",
 )
 
 VALID_TIMESTAMP_STYLES: t.Sequence[str] = ("t", "T", "d", "D", "f", "F", "R")
@@ -40,9 +41,9 @@ LINK_REGEX = re.compile(
 )
 INVITE_REGEX = re.compile(r"(?:https?://)?discord(?:app)?\.(?:com/invite|gg)/[a-zA-Z0-9]+/?")
 
-# \*([^*]*)\*"
 STRIKETHROUGH_REGEX = re.compile(r"~~([\S\s]*?)~~")
-ITALIC_REGEX = re.compile(r"_([^_]+)_")
+ITALIC_UNDERSCORE_REGEX = re.compile(r"_([^_]+)_")
+ITALIC_ASTERISK_REGEX = re.compile(r"\*([^*]+)\*")
 BOLD_REGEX = re.compile(r"\*{2}([\s\S]*?)\*{2}")
 UNDERLINE_REGEX = re.compile(r"__([\s\S]*?)__")
 CODE_BLOCK_REGEX = re.compile(r"`([^`]+)`")
@@ -603,8 +604,8 @@ def remove_underline(content: str) -> str:
     return cleaned
 
 
-def remove_italic(content: str) -> str:
-    """Removes the italic formatting from discord messages.
+def remove_italic_underscore(content: str) -> str:
+    """Removes the italic formatting from discord messages caused by single underscores.
 
     Parameters
     ----------
@@ -616,12 +617,34 @@ def remove_italic(content: str) -> str:
     str
         The `cleaned` string without italic formatting.
     """
-    matches = re.findall(ITALIC_REGEX, content)
+    matches = re.findall(ITALIC_UNDERSCORE_REGEX, content)
     if not matches:
         return content
     cleaned = re.sub(f"_{matches[0]}_", matches[0], content)
     for match in matches:
         cleaned = re.sub(f"_{match}_", match, cleaned)
+    return cleaned
+
+
+def remove_italic_asterisk(content: str) -> str:
+    """Removes the italic formatting from discord messages caused by single asterisks.
+
+    Parameters
+    ----------
+    content : str
+        The `str` object to be cleaned from italic formatting.
+
+    Returns
+    -------
+    str
+        The `cleaned` string without italic formatting.
+    """
+    matches = re.findall(ITALIC_ASTERISK_REGEX, content)
+    if not matches:
+        return content
+    cleaned = re.sub(f"\*{matches[0]}\*", matches[0], content)
+    for match in matches:
+        cleaned = re.sub(f"\*{match}\*", match, cleaned)
     return cleaned
 
 
