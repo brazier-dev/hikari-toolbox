@@ -101,8 +101,8 @@ def get_possessive(user: hikari.PartialUser) -> str:
     """Returns the possessive noun of a user or a member.
 
     If a `Member` is passed, the display name is used to form the
-    possessive noun, where possible. In all other situations, the
-    username is used instead.
+    possessive noun when possible. In all other situations, the username
+    is used instead.
 
     Parameters
     ----------
