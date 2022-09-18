@@ -445,22 +445,23 @@ def as_command_choices(*args: t.Any, **kwargs: t.Any) -> t.Sequence[hikari.Comma
     return _list_to_command_choices(choices)
 
 
-def remove_md(message: hikari.Message) -> str:
+def remove_md(content: str) -> str:
     """Removes the markdown formatting from discord messages.
     
     Parameters
     ----------
-    message : hikari.Message
-        The `hikari.Message` object, which needs their `content` cleaned from discord's markdown formatting.
+    content : str
+        The `str` object, which needs their `content` cleaned from discord's markdown formatting.
 
     Returns
     -------
     str
-        The `hikari.Message.content` string without markdown formatting.
+        The `content` string without markdown formatting.
     """
-    if message.content is None:
+    if content is None:
         return "Message is empty"
-    
+
+
 # MIT License
 #
 # Copyright (c) 2022-present HyperGH
