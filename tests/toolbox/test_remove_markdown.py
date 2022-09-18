@@ -1,4 +1,4 @@
-from toolbox import remove_strikethrough, remove_code_block, remove_multi_code_block, remove_bold, remove_underline, remove_italic_underscore, remove_italic_asterisk
+from toolbox import remove_strikethrough, remove_code_block, remove_multi_code_block, remove_bold, remove_underline, remove_italic_underscore, remove_italic_asterisk, remove_spoiler, remove_quote, remove_multi_quote
 
 def test_remove_strikethrough():
     assert remove_strikethrough("~~test~~") == "test"
@@ -117,3 +117,42 @@ def test_remove_italic_asterisk():
         == "test we write some random gibberish hehe *"
     )
     assert remove_italic_asterisk("*test \nwith line break*") == "test \nwith line break"
+
+
+def test_remove_spoiler():
+    assert remove_spoiler("") == ""
+    assert remove_spoiler("||test||") == "test"
+    assert remove_spoiler("test") == "test"
+    assert remove_spoiler("||test") == "||test"
+    assert remove_spoiler("||test|| ||another test||") == "test another test"
+    assert remove_spoiler("||test|| another test||") == "test another test||"
+    assert remove_spoiler("||test|| ||another test|| ||and another one||") == "test another test and another one"
+    assert remove_spoiler("||test||||") == "test||"
+    assert remove_spoiler("test  ||||more randomness||") == "test  ||more randomness"
+    assert remove_spoiler("test  || ||more randomness||") == "test   more randomness||"
+    assert (
+        remove_spoiler("||test|| we write some random|| gibberish ||hehe ||")
+        == "test we write some random gibberish hehe ||"
+    )
+    assert remove_spoiler("||test \nwith line break||") == "test \nwith line break"
+
+
+def test_remove_quote():
+    assert remove_quote("") == ""
+    assert remove_quote("a") == "a"
+    assert remove_quote("> b") == "b"
+    assert remove_quote("\n> c") == "\nc"
+    assert remove_quote("> \nd") == "\nd"
+    assert remove_quote(">e") == ">e"
+    assert remove_quote("> fgh") == "fgh"
+    assert remove_quote("\n\n\n> i") == "\n\n\ni"
+
+def test_remove_multi_quote():
+    assert remove_multi_quote("") == ""
+    assert remove_multi_quote("a") == "a"
+    assert remove_multi_quote(">>> b") == "b"
+    assert remove_multi_quote("\n>>> c") == "\nc"
+    assert remove_multi_quote(">>> \nd") == "\nd"
+    assert remove_multi_quote(">>>e") == ">>>e"
+    assert remove_multi_quote(">>> fgh") == "fgh"
+    assert remove_multi_quote("\n\n\n>>> i") == "\n\n\ni"
