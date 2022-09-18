@@ -27,6 +27,7 @@ __all__: t.Sequence[str] = (
     "remove_multi_code_block",
     "remove_bold",
     "remove_underline",
+    "remove_italic",
 )
 
 VALID_TIMESTAMP_STYLES: t.Sequence[str] = ("t", "T", "d", "D", "f", "F", "R")
@@ -39,11 +40,12 @@ LINK_REGEX = re.compile(
 )
 INVITE_REGEX = re.compile(r"(?:https?://)?discord(?:app)?\.(?:com/invite|gg)/[a-zA-Z0-9]+/?")
 
-STRIKETHROUGH_REGEX = re.compile(r"(~~[\S\s]*?~~)")
-ITALIC_REGEX = re.compile(r"_([^_]*)_|\*([^*]*)\*")
-BOLD_REGEX = re.compile(r"(\*{2}[\s\S]*?\*{2})")
+# \*([^*]*)\*"
+STRIKETHROUGH_REGEX = re.compile(r"~~([\S\s]*?)~~")
+ITALIC_REGEX = re.compile(r"_([^_]+)_")
+BOLD_REGEX = re.compile(r"\*{2}([\s\S]*?)\*{2}")
 UNDERLINE_REGEX = re.compile(r"__([\s\S]*?)__")
-CODE_BLOCK_REGEX = re.compile(r"`([^`]*)`")
+CODE_BLOCK_REGEX = re.compile(r"`([^`]+)`")
 MULTI_CODE_BLOCK_REGEX = re.compile(r"`{3}([\S\s]*?)`{3}")
 QUOTE_REGEX = re.compile(r"^> ([\s\S]*?)")
 MULTI_QUOTE_REGEX = re.compile(r"^>>> ([\s\S]*?)")
@@ -503,11 +505,12 @@ def remove_strikethrough(content: str) -> str:
     str
         The `cleaned` string without strikethrough formatting.
     """
-    cleaned = ""
     matches = re.findall(STRIKETHROUGH_REGEX, content)
     if not matches:
         return content
-    cleaned = re.sub("~~", "", content, len(matches) * 2)
+    cleaned = re.sub(f"~~{matches[0]}~~", matches[0], content)
+    for match in matches:
+        cleaned = re.sub(f"~~{match}~~", match, cleaned)
     return cleaned
 
 
@@ -524,11 +527,12 @@ def remove_code_block(content: str) -> str:
     str
         The `cleaned` string without code block formatting.
     """
-    cleaned = ""
     matches = re.findall(CODE_BLOCK_REGEX, content)
     if not matches:
         return content
-    cleaned = re.sub("`", "", content, len(matches) * 2)
+    cleaned = re.sub(f"`{matches[0]}`", matches[0], content)
+    for match in matches:
+        cleaned = re.sub(f"`{match}`", match, cleaned)
     return cleaned
 
 
@@ -545,11 +549,13 @@ def remove_multi_code_block(content: str) -> str:
     str
         The `cleaned` string without multiline codeblock formatting.
     """
-    cleaned = ""
+ 
     matches = re.findall(MULTI_CODE_BLOCK_REGEX, content)
     if not matches:
         return content
-    cleaned = re.sub("```", "", content, len(matches) * 2)
+    cleaned = re.sub(f"```{matches[0]}```", matches[0], content)
+    for match in matches:
+        cleaned = re.sub(f"```{match}```", match, cleaned)
     return cleaned
 
 
@@ -566,11 +572,12 @@ def remove_bold(content: str) -> str:
     str
         The `cleaned` string without bold formatting.
     """
-    cleaned = ""
     matches = re.findall(BOLD_REGEX, content)
     if not matches:
         return content
-    cleaned = re.sub(r"\*\*", "", content, len(matches) * 2)
+    cleaned = re.sub(f"\*\*{matches[0]}\*\*", matches[0], content)
+    for match in matches:
+        cleaned = re.sub(f"\*\*{match}\*\*", match, cleaned)
     return cleaned
 
 
@@ -587,33 +594,35 @@ def remove_underline(content: str) -> str:
     str
         The `cleaned` string without underlining.
     """
-    cleaned = ""
     matches = re.findall(UNDERLINE_REGEX, content)
     if not matches:
         return content
-    cleaned = re.sub("__", "", content, len(matches) * 2)
+    cleaned = re.sub(f"__{matches[0]}__", matches[0], content)
+    for match in matches:
+        cleaned = re.sub(f"__{match}__", match, cleaned)
     return cleaned
 
 
-# def remove_strikethrough(content: str) -> str:
-#     """Removes the strikethrough formatting from discord messages.
+def remove_italic(content: str) -> str:
+    """Removes the italic formatting from discord messages.
 
-#     Parameters
-#     ----------
-#     content : str
-#         The `str` object to be cleaned from strikethrough.
+    Parameters
+    ----------
+    content : str
+        The `str` object to be cleaned from italic formatting.
 
-#     Returns
-#     -------
-#     str
-#         The `cleaned` string without strikethrough formatting.
-#     """
-#     cleaned = ""
-#     matches = re.findall(STRIKETHROUGH, content)
-#     if not matches:
-#         return content
-#     cleaned = re.sub("~~", "", content, len(matches) * 2)
-#     return cleaned
+    Returns
+    -------
+    str
+        The `cleaned` string without italic formatting.
+    """
+    matches = re.findall(ITALIC_REGEX, content)
+    if not matches:
+        return content
+    cleaned = re.sub(f"_{matches[0]}_", matches[0], content)
+    for match in matches:
+        cleaned = re.sub(f"_{match}_", match, cleaned)
+    return cleaned
 
 
 # def remove_strikethrough(content: str) -> str:
