@@ -21,6 +21,7 @@ __all__: t.Sequence[str] = (
     "can_moderate",
     "as_command_choices",
     "remove_md",
+    "remove_strikethrough",
 )
 
 VALID_TIMESTAMP_STYLES: t.Sequence[str] = ("t", "T", "d", "D", "f", "F", "R")
@@ -33,7 +34,9 @@ LINK_REGEX = re.compile(
 )
 INVITE_REGEX = re.compile(r"(?:https?://)?discord(?:app)?\.(?:com/invite|gg)/[a-zA-Z0-9]+/?")
 
-MD_REGEX = re.compile(r"`{3}([\S\s]*?)`{3}|`([^`]*)`|~~([\S\s]*?)~~|\*{2}([\s\S]*?)\*{2}(?!\*)|\*([^*]*)\*|__([\s\S]*?)__|^>>>([\s\S]*?)|^>([\s\S]*?)")
+MD_REGEX = re.compile(r"`{3}([\S\s]*?)`{3}|`([^`]*)`|\*{2}([\s\S]*?)\*{2}(?!\*)|\*([^*]*)\*|__([\s\S]*?)__|^>>>([\s\S]*?)|^>([\s\S]*?)")
+
+STRIKETHROUGH_REGEX = re.compile(r"~~[\S\s]*?~~")
 
 
 def format_dt(time: datetime.datetime, style: t.Optional[str] = None) -> str:
@@ -451,15 +454,37 @@ def remove_md(content: str) -> str:
     Parameters
     ----------
     content : str
-        The `str` object, which needs their `content` cleaned from discord's markdown formatting.
+        The `str` object, which needs their content cleaned from discord's markdown formatting.
 
     Returns
     -------
     str
-        The `content` string without markdown formatting.
+        The `cleaned` string without markdown formatting.
     """
     if content is None:
         return "Message is empty"
+
+
+def remove_strikethrough(content: str):
+    """Removes the strikethrough formatting from discord messages.
+
+    Parameters
+    ----------
+    content : str
+        The `str` object to be cleaned from strikethrough.
+
+    Returns
+    -------
+    str
+        The `cleaned` string without strikethrough formatting.
+    """
+    cleaned = ""
+    matches = re.findall(STRIKETHROUGH_REGEX, content)
+    if len(matches) == 0:
+        return content
+    cleaned = re.sub("~~", "", content, len(matches)*2)
+    return cleaned
+
 
 
 # MIT License
