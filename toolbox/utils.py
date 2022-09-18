@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from enum import Enum
 import datetime
 import re
 import typing as t
@@ -20,8 +21,9 @@ __all__: t.Sequence[str] = (
     "calculate_permissions",
     "can_moderate",
     "as_command_choices",
-    "remove_md",
+    "remove_markdown",
     "remove_strikethrough",
+    "remove_block",
 )
 
 VALID_TIMESTAMP_STYLES: t.Sequence[str] = ("t", "T", "d", "D", "f", "F", "R")
@@ -34,9 +36,14 @@ LINK_REGEX = re.compile(
 )
 INVITE_REGEX = re.compile(r"(?:https?://)?discord(?:app)?\.(?:com/invite|gg)/[a-zA-Z0-9]+/?")
 
-MD_REGEX = re.compile(r"`{3}([\S\s]*?)`{3}|`([^`]*)`|\*{2}([\s\S]*?)\*{2}(?!\*)|\*([^*]*)\*|__([\s\S]*?)__|^>>>([\s\S]*?)|^>([\s\S]*?)")
-
-STRIKETHROUGH_REGEX = re.compile(r"~~[\S\s]*?~~")
+STRIKETHROUGH = re.compile(r"(~~[\S\s]*?~~)")
+ITALIC = re.compile(r"_([^_]*)_|\*([^*]*)\*")
+BOLD = re.compile(r"\*{2}([\s\S]*?)\*{2}(?!\*)")
+UNDERLINE = re.compile(r"__([\s\S]*?)__")
+BLOCK = re.compile(r"`([^`]*)`")
+MULTI_BLOCK = re.compile(r"`{3}([\S\s]*?)`{3}")
+QUOTE = re.compile(r"^> ([\s\S]*?)")
+MULTI_QUOTE = re.compile(r"^>>> ([\s\S]*?)")
 
 
 def format_dt(time: datetime.datetime, style: t.Optional[str] = None) -> str:
@@ -448,9 +455,20 @@ def as_command_choices(*args: t.Any, **kwargs: t.Any) -> t.Sequence[hikari.Comma
     return _list_to_command_choices(choices)
 
 
-def remove_md(content: str) -> str:
+# class MarkdownFormat(Enum):
+#     STRIKETHROUGH = re.compile(r"(~~[\S\s]*?~~)")
+#     ITALIC = re.compile(r"_([^_]*)_|\*([^*]*)\*")
+#     BOLD = re.compile(r"\*{2}([\s\S]*?)\*{2}(?!\*)")
+#     UNDERLINE = re.compile(r"__([\s\S]*?)__")
+#     BLOCK = re.compile(r"`([^`]*)`")
+#     MULTI_BLOCK = re.compile(r"`{3}([\S\s]*?)`{3}")
+#     QUOTE = re.compile(r"^> ([\s\S]*?)")
+#     MULTI_QUOTE = re.compile(r"^>>> ([\s\S]*?)")
+
+
+def remove_markdown(content: str) -> str:
     """Removes the markdown formatting from discord messages.
-    
+
     Parameters
     ----------
     content : str
@@ -465,7 +483,7 @@ def remove_md(content: str) -> str:
         return "Message is empty"
 
 
-def remove_strikethrough(content: str):
+def remove_strikethrough(content: str) -> str:
     """Removes the strikethrough formatting from discord messages.
 
     Parameters
@@ -479,12 +497,152 @@ def remove_strikethrough(content: str):
         The `cleaned` string without strikethrough formatting.
     """
     cleaned = ""
-    matches = re.findall(STRIKETHROUGH_REGEX, content)
-    if len(matches) == 0:
+    matches = re.findall(STRIKETHROUGH, content)
+    if not matches:
         return content
-    cleaned = re.sub("~~", "", content, len(matches)*2)
+    cleaned = re.sub("~~", "", content, len(matches) * 2)
     return cleaned
 
+def remove_block(content: str) -> str:
+    """Removes the block formatting from discord messages.
+
+    Parameters
+    ----------
+    content : str
+        The `str` object to be cleaned from block formatting.
+
+    Returns
+    -------
+    str
+        The `cleaned` string without block formatting.
+    """
+    cleaned = ""
+    matches = re.findall(BLOCK, content)
+    if not matches:
+        return content
+    cleaned = re.sub("`", "", content, len(matches) * 2)
+    return cleaned
+
+
+# def remove_strikethrough(content: str) -> str:
+#     """Removes the strikethrough formatting from discord messages.
+
+#     Parameters
+#     ----------
+#     content : str
+#         The `str` object to be cleaned from strikethrough.
+
+#     Returns
+#     -------
+#     str
+#         The `cleaned` string without strikethrough formatting.
+#     """
+#     cleaned = ""
+#     matches = re.findall(STRIKETHROUGH, content)
+#     if not matches:
+#         return content
+#     cleaned = re.sub("~~", "", content, len(matches) * 2)
+#     return cleaned
+
+# def remove_strikethrough(content: str) -> str:
+#     """Removes the strikethrough formatting from discord messages.
+
+#     Parameters
+#     ----------
+#     content : str
+#         The `str` object to be cleaned from strikethrough.
+
+#     Returns
+#     -------
+#     str
+#         The `cleaned` string without strikethrough formatting.
+#     """
+#     cleaned = ""
+#     matches = re.findall(STRIKETHROUGH, content)
+#     if not matches:
+#         return content
+#     cleaned = re.sub("~~", "", content, len(matches) * 2)
+#     return cleaned
+
+# def remove_strikethrough(content: str) -> str:
+#     """Removes the strikethrough formatting from discord messages.
+
+#     Parameters
+#     ----------
+#     content : str
+#         The `str` object to be cleaned from strikethrough.
+
+#     Returns
+#     -------
+#     str
+#         The `cleaned` string without strikethrough formatting.
+#     """
+#     cleaned = ""
+#     matches = re.findall(STRIKETHROUGH, content)
+#     if not matches:
+#         return content
+#     cleaned = re.sub("~~", "", content, len(matches) * 2)
+#     return cleaned
+
+# def remove_strikethrough(content: str) -> str:
+#     """Removes the strikethrough formatting from discord messages.
+
+#     Parameters
+#     ----------
+#     content : str
+#         The `str` object to be cleaned from strikethrough.
+
+#     Returns
+#     -------
+#     str
+#         The `cleaned` string without strikethrough formatting.
+#     """
+#     cleaned = ""
+#     matches = re.findall(STRIKETHROUGH, content)
+#     if not matches:
+#         return content
+#     cleaned = re.sub("~~", "", content, len(matches) * 2)
+#     return cleaned
+
+# def remove_strikethrough(content: str) -> str:
+#     """Removes the strikethrough formatting from discord messages.
+
+#     Parameters
+#     ----------
+#     content : str
+#         The `str` object to be cleaned from strikethrough.
+
+#     Returns
+#     -------
+#     str
+#         The `cleaned` string without strikethrough formatting.
+#     """
+#     cleaned = ""
+#     matches = re.findall(STRIKETHROUGH, content)
+#     if not matches:
+#         return content
+#     cleaned = re.sub("~~", "", content, len(matches) * 2)
+#     return cleaned
+
+# def remove_strikethrough(content: str) -> str:
+#     """Removes the strikethrough formatting from discord messages.
+
+#     Parameters
+#     ----------
+#     content : str
+#         The `str` object to be cleaned from strikethrough.
+
+#     Returns
+#     -------
+#     str
+#         The `cleaned` string without strikethrough formatting.
+#     """
+#     cleaned = ""
+#     matches = re.findall(STRIKETHROUGH, content)
+#     if not matches:
+#         return content
+#     cleaned = re.sub("~~", "", content, len(matches) * 2)
+#     return cleaned
 
 
 # MIT License
