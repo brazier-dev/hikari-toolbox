@@ -29,6 +29,9 @@ __all__: t.Sequence[str] = (
     "remove_underline",
     "remove_italic_underscore",
     "remove_italic_asterisk",
+    "remove_spoiler",
+    "remove_quote",
+    "remove_multi_quote",
 )
 
 VALID_TIMESTAMP_STYLES: t.Sequence[str] = ("t", "T", "d", "D", "f", "F", "R")
@@ -46,10 +49,11 @@ ITALIC_UNDERSCORE_REGEX = re.compile(r"_([^_]+)_")
 ITALIC_ASTERISK_REGEX = re.compile(r"\*([^*]+)\*")
 BOLD_REGEX = re.compile(r"\*{2}([\s\S]*?)\*{2}")
 UNDERLINE_REGEX = re.compile(r"__([\s\S]*?)__")
+SPOILER_REGEX = re.compile(r"\|{2}([\s\S]+)\|{2}")
 CODE_BLOCK_REGEX = re.compile(r"`([^`]+)`")
 MULTI_CODE_BLOCK_REGEX = re.compile(r"`{3}([\S\s]*?)`{3}")
-QUOTE_REGEX = re.compile(r"^> ([\s\S]*?)")
-MULTI_QUOTE_REGEX = re.compile(r"^>>> ([\s\S]*?)")
+QUOTE_REGEX = re.compile(r"\s*\> (.*)",re.DOTALL)
+MULTI_QUOTE_REGEX = re.compile(r"\s*\>>> (.*)", re.DOTALL)
 
 
 def format_dt(time: datetime.datetime, style: t.Optional[str] = None) -> str:
@@ -648,46 +652,70 @@ def remove_italic_asterisk(content: str) -> str:
     return cleaned
 
 
-# def remove_strikethrough(content: str) -> str:
-#     """Removes the strikethrough formatting from discord messages.
+def remove_spoiler(content: str) -> str:
+    """Removes the spoiler from discord messages.
 
-#     Parameters
-#     ----------
-#     content : str
-#         The `str` object to be cleaned from strikethrough.
+    Parameters
+    ----------
+    content : str
+        The `str` object to be cleaned from spoilers.
 
-#     Returns
-#     -------
-#     str
-#         The `cleaned` string without strikethrough formatting.
-#     """
-#     cleaned = ""
-#     matches = re.findall(STRIKETHROUGH, content)
-#     if not matches:
-#         return content
-#     cleaned = re.sub("~~", "", content, len(matches) * 2)
-#     return cleaned
+    Returns
+    -------
+    str
+        The `cleaned` string without spoilers.
+    """
+    matches = re.findall(SPOILER_REGEX, content)
+    if not matches:
+        return content
+    cleaned = re.sub(f"\|\|{matches[0]}\|\|", matches[0], content)
+    for match in matches:
+        cleaned = re.sub(f"\|\|{match}\|\|", match, cleaned)
+    return cleaned
 
 
-# def remove_strikethrough(content: str) -> str:
-#     """Removes the strikethrough formatting from discord messages.
+def remove_quote(content: str) -> str:
+    """Removes the quote formatting from discord messages.
 
-#     Parameters
-#     ----------
-#     content : str
-#         The `str` object to be cleaned from strikethrough.
+    Parameters
+    ----------
+    content : str
+        The `str` object to be cleaned from quote formatting.
 
-#     Returns
-#     -------
-#     str
-#         The `cleaned` string without strikethrough formatting.
-#     """
-#     cleaned = ""
-#     matches = re.findall(STRIKETHROUGH, content)
-#     if not matches:
-#         return content
-#     cleaned = re.sub("~~", "", content, len(matches) * 2)
-#     return cleaned
+    Returns
+    -------
+    str
+        The `cleaned` string without quote formatting.
+    """
+    matches = re.findall(QUOTE_REGEX, content)
+    if not matches:
+        return content
+    cleaned = re.sub(f"> {matches[0]}", matches[0], content)
+    for match in matches:
+        cleaned = re.sub(f"> {match}", match, cleaned)
+    return cleaned
+
+
+def remove_multi_quote(content: str) -> str:
+    """Removes the multiline quote formatting from discord messages.
+
+    Parameters
+    ----------
+    content : str
+        The `str` object to be cleaned from multiline quote formatting.
+
+    Returns
+    -------
+    str
+        The `cleaned` string without multiline quote formatting.
+    """
+    matches = re.findall(MULTI_QUOTE_REGEX, content)
+    if not matches:
+        return content
+    cleaned = re.sub(f">>> {matches[0]}", matches[0], content)
+    for match in matches:
+        cleaned = re.sub(f">>> {match}", match, cleaned)
+    return cleaned
 
 
 # MIT License
