@@ -24,6 +24,7 @@ __all__: t.Sequence[str] = (
     "remove_markdown",
     "remove_strikethrough",
     "remove_block",
+    "remove_multiblock",
 )
 
 VALID_TIMESTAMP_STYLES: t.Sequence[str] = ("t", "T", "d", "D", "f", "F", "R")
@@ -524,25 +525,25 @@ def remove_block(content: str) -> str:
     return cleaned
 
 
-# def remove_strikethrough(content: str) -> str:
-#     """Removes the strikethrough formatting from discord messages.
+def remove_multiblock(content: str) -> str:
+    """Removes the multiblock formatting from discord messages.
 
-#     Parameters
-#     ----------
-#     content : str
-#         The `str` object to be cleaned from strikethrough.
+    Parameters
+    ----------
+    content : str
+        The `str` object to be cleaned from multiblock formatting.
 
-#     Returns
-#     -------
-#     str
-#         The `cleaned` string without strikethrough formatting.
-#     """
-#     cleaned = ""
-#     matches = re.findall(STRIKETHROUGH, content)
-#     if not matches:
-#         return content
-#     cleaned = re.sub("~~", "", content, len(matches) * 2)
-#     return cleaned
+    Returns
+    -------
+    str
+        The `cleaned` string without multiblock formatting.
+    """
+    cleaned = ""
+    matches = re.findall(MULTI_BLOCK, content)
+    if not matches:
+        return content
+    cleaned = re.sub("```", "", content, len(matches) * 2)
+    return cleaned
 
 # def remove_strikethrough(content: str) -> str:
 #     """Removes the strikethrough formatting from discord messages.
