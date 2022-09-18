@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from enum import Enum
+from enum import IntFlag
 import datetime
 import re
 import typing as t
@@ -23,8 +23,9 @@ __all__: t.Sequence[str] = (
     "as_command_choices",
     "remove_markdown",
     "remove_strikethrough",
-    "remove_block",
-    "remove_multiblock",
+    "remove_code_block",
+    "remove_multi_code_block",
+    "remove_bold",
 )
 
 VALID_TIMESTAMP_STYLES: t.Sequence[str] = ("t", "T", "d", "D", "f", "F", "R")
@@ -37,14 +38,14 @@ LINK_REGEX = re.compile(
 )
 INVITE_REGEX = re.compile(r"(?:https?://)?discord(?:app)?\.(?:com/invite|gg)/[a-zA-Z0-9]+/?")
 
-STRIKETHROUGH = re.compile(r"(~~[\S\s]*?~~)")
-ITALIC = re.compile(r"_([^_]*)_|\*([^*]*)\*")
-BOLD = re.compile(r"\*{2}([\s\S]*?)\*{2}(?!\*)")
-UNDERLINE = re.compile(r"__([\s\S]*?)__")
-BLOCK = re.compile(r"`([^`]*)`")
-MULTI_BLOCK = re.compile(r"`{3}([\S\s]*?)`{3}")
-QUOTE = re.compile(r"^> ([\s\S]*?)")
-MULTI_QUOTE = re.compile(r"^>>> ([\s\S]*?)")
+STRIKETHROUGH_REGEX = re.compile(r"(~~[\S\s]*?~~)")
+ITALIC_REGEX = re.compile(r"_([^_]*)_|\*([^*]*)\*")
+BOLD_REGEX = re.compile(r"(\*{2}[\s\S]*?\*{2})")
+UNDERLINE_REGEX = re.compile(r"__([\s\S]*?)__")
+CODE_BLOCK_REGEX = re.compile(r"`([^`]*)`")
+MULTI_CODE_BLOCK_REGEX = re.compile(r"`{3}([\S\s]*?)`{3}")
+QUOTE_REGEX = re.compile(r"^> ([\s\S]*?)")
+MULTI_QUOTE_REGEX = re.compile(r"^>>> ([\s\S]*?)")
 
 
 def format_dt(time: datetime.datetime, style: t.Optional[str] = None) -> str:
@@ -456,15 +457,19 @@ def as_command_choices(*args: t.Any, **kwargs: t.Any) -> t.Sequence[hikari.Comma
     return _list_to_command_choices(choices)
 
 
-# class MarkdownFormat(Enum):
-#     STRIKETHROUGH = re.compile(r"(~~[\S\s]*?~~)")
-#     ITALIC = re.compile(r"_([^_]*)_|\*([^*]*)\*")
-#     BOLD = re.compile(r"\*{2}([\s\S]*?)\*{2}(?!\*)")
-#     UNDERLINE = re.compile(r"__([\s\S]*?)__")
-#     BLOCK = re.compile(r"`([^`]*)`")
-#     MULTI_BLOCK = re.compile(r"`{3}([\S\s]*?)`{3}")
-#     QUOTE = re.compile(r"^> ([\s\S]*?)")
-#     MULTI_QUOTE = re.compile(r"^>>> ([\s\S]*?)")
+class MarkdownFormat(IntFlag):
+    NONE = 0
+    STRIKETHROUGH = 1
+    ITALIC = 2
+    BOLD = 4
+    UNDERLINE = 8
+    CODE_BLOCK = 16
+    MULTI_CODE_BLOCK = 32
+    QUOTE = 64
+    MULTI_QUOTE = 128
+    SPOILER = 256
+
+    ALL = STRIKETHROUGH | ITALIC | BOLD | UNDERLINE | CODE_BLOCK | MULTI_CODE_BLOCK | QUOTE | MULTI_QUOTE | SPOILER
 
 
 def remove_markdown(content: str) -> str:
@@ -498,72 +503,74 @@ def remove_strikethrough(content: str) -> str:
         The `cleaned` string without strikethrough formatting.
     """
     cleaned = ""
-    matches = re.findall(STRIKETHROUGH, content)
+    matches = re.findall(STRIKETHROUGH_REGEX, content)
     if not matches:
         return content
     cleaned = re.sub("~~", "", content, len(matches) * 2)
     return cleaned
 
-def remove_block(content: str) -> str:
-    """Removes the block formatting from discord messages.
+
+def remove_code_block(content: str) -> str:
+    """Removes the code block formatting from discord messages.
 
     Parameters
     ----------
     content : str
-        The `str` object to be cleaned from block formatting.
+        The `str` object to be cleaned from code block formatting.
 
     Returns
     -------
     str
-        The `cleaned` string without block formatting.
+        The `cleaned` string without code block formatting.
     """
     cleaned = ""
-    matches = re.findall(BLOCK, content)
+    matches = re.findall(CODE_BLOCK_REGEX, content)
     if not matches:
         return content
     cleaned = re.sub("`", "", content, len(matches) * 2)
     return cleaned
 
 
-def remove_multiblock(content: str) -> str:
-    """Removes the multiblock formatting from discord messages.
+def remove_multi_code_block(content: str) -> str:
+    """Removes the multiline codeblock formatting from discord messages.
 
     Parameters
     ----------
     content : str
-        The `str` object to be cleaned from multiblock formatting.
+        The `str` object to be cleaned from multiline codeblock formatting.
 
     Returns
     -------
     str
-        The `cleaned` string without multiblock formatting.
+        The `cleaned` string without multiline codeblock formatting.
     """
     cleaned = ""
-    matches = re.findall(MULTI_BLOCK, content)
+    matches = re.findall(MULTI_CODE_BLOCK_REGEX, content)
     if not matches:
         return content
     cleaned = re.sub("```", "", content, len(matches) * 2)
     return cleaned
 
-# def remove_strikethrough(content: str) -> str:
-#     """Removes the strikethrough formatting from discord messages.
 
-#     Parameters
-#     ----------
-#     content : str
-#         The `str` object to be cleaned from strikethrough.
+def remove_bold(content: str) -> str:
+    """Removes the bold formatting from discord messages.
 
-#     Returns
-#     -------
-#     str
-#         The `cleaned` string without strikethrough formatting.
-#     """
-#     cleaned = ""
-#     matches = re.findall(STRIKETHROUGH, content)
-#     if not matches:
-#         return content
-#     cleaned = re.sub("~~", "", content, len(matches) * 2)
-#     return cleaned
+    Parameters
+    ----------
+    content : str
+        The `str` object to be cleaned from bold formatting.
+
+    Returns
+    -------
+    str
+        The `cleaned` string without bold formatting.
+    """
+    cleaned = ""
+    matches = re.findall(BOLD_REGEX, content)
+    if not matches:
+        return content
+    cleaned = re.sub("\*\*", "", content, len(matches) * 2)
+    return cleaned
 
 # def remove_strikethrough(content: str) -> str:
 #     """Removes the strikethrough formatting from discord messages.
