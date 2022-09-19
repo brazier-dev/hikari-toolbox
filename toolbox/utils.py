@@ -97,7 +97,7 @@ def get_member_color(member: hikari.Member) -> hikari.Color:
     return hikari.Color(0)
 
 
-def get_possessive(user: hikari.PartialUser) -> str:
+def get_possessive(user: hikari.User) -> str:
     """Returns the possessive noun of a user or a member.
 
     If a `Member` is passed, the display name is used to form the
@@ -106,7 +106,7 @@ def get_possessive(user: hikari.PartialUser) -> str:
 
     Parameters
     ----------
-    user : PartialUser
+    user : User
         The user or member to get the possessive noun of.
 
     Returns
