@@ -12,7 +12,7 @@ __all__: t.Sequence[str] = (
     "format_dt",
     "utcnow",
     "get_member_color",
-    "get_user_possessive",
+    "get_possessive",
     "sort_roles",
     "is_above",
     "is_url",
