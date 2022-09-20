@@ -427,7 +427,7 @@ def as_command_choices(*args: t.Any, **kwargs: t.Any) -> t.Sequence[hikari.Comma
     *args : typing.Union[str, int, float] or typing.Sequence[typing.Union[str, int, float]], optional
         The parameters to make the `typing.Sequence[CommandChoice]` with with.
 
-        \*args can be provided in any of the following ways:
+        *args can be provided in any of the following ways:
 
         .. code-block:: python
 
