@@ -468,14 +468,17 @@ def as_command_choices(*args: t.Any, **kwargs: t.Any) -> t.Sequence[hikari.Comma
 
 def validate_embed(embed: hikari.Embed) -> hikari.Embed:
     """Validate an embed, checking the length of all fields.
+
     Parameters
     ----------
     embed : hikari.Embed
         The embed to validate.
+    
     Raises
     ------
     EmbedValidationError
         Raised when the embed is invalid.
+    
     Returns
     -------
     hikari.Embed
