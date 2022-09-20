@@ -1,18 +1,18 @@
 import typing as t
 
-__all__: t.Sequence[str] = ("ToolboxError", "CacheFailureError")
+__all__: t.Sequence[str] = ("ToolboxError", "CacheFailureError", "EmbedValidationError")
 
 
 class ToolboxError(Exception):
     """Base class for exceptions in this module."""
 
-    ...
-
 
 class CacheFailureError(ToolboxError):
     """Exception raised when a cache lookup fails."""
 
-    ...
+
+class EmbedValidationError(ToolboxError):
+    """Exception raised when a embed validation fails."""
 
 
 # MIT License
