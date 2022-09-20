@@ -12,6 +12,7 @@ __all__: t.Sequence[str] = (
     "format_dt",
     "utcnow",
     "get_member_color",
+    "get_possessive",
     "sort_roles",
     "is_above",
     "is_url",
@@ -94,6 +95,27 @@ def get_member_color(member: hikari.Member) -> hikari.Color:
             return role.color
 
     return hikari.Color(0)
+
+
+def get_possessive(user: hikari.User) -> str:
+    """Returns the possessive noun of a user or a member.
+
+    If a `Member` is passed, the display name is used to form the
+    possessive noun when possible. In all other situations, the username
+    is used instead.
+
+    Parameters
+    ----------
+    user : User
+        The user or member to get the possessive noun of.
+
+    Returns
+    -------
+    str
+        The possessive noun of the user or member.
+    """
+    name = getattr(user, "display_name", user.username)
+    return f"{name}'{'s' if not name.endswith('s') else ''}"
 
 
 def sort_roles(roles: t.Sequence[hikari.Role], ascending: bool = False) -> t.Sequence[hikari.Role]:
