@@ -475,7 +475,7 @@ def validate_embed(embed: hikari.Embed) -> hikari.Embed:
     Raises
     ------
     EmbedValidationError
-        If the embed is invalid.
+        Raised when the embed is invalid.
     Returns
     -------
     hikari.Embed
