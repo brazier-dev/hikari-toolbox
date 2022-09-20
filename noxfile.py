@@ -42,6 +42,7 @@ def pytest(session: nox.Session):
     session.install("-Ur", "requirements.txt")
     session.install("-U", ".")
     session.install("-U", "pytest")
+    session.install("-U", "pytest-asyncio")
     session.run("pytest", PATH_TO_TESTS)
 
 
