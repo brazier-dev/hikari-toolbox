@@ -502,9 +502,13 @@ def validate_embed(embed: hikari.Embed) -> hikari.Embed:
 
         for i, field in enumerate(embed.fields):
             if (length := len(field.name)) > 256:
-                raise EmbedValidationError(f"Embed field {i} ({field.name}): name must be less than 256 characters, got {length}.")
+                raise EmbedValidationError(
+                    f"Embed field {i} ({field.name}): name must be less than 256 characters, got {length}."
+                )
             if (length := len(field.value)) > 1024:
-                raise EmbedValidationError(f"Embed field {i} ({field.name}): value must be less than 1024 characters, got {length}.")
+                raise EmbedValidationError(
+                    f"Embed field {i} ({field.name}): value must be less than 1024 characters, got {length}."
+                )
 
     return embed
 
