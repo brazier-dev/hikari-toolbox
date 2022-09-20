@@ -1,6 +1,6 @@
 import re
-from enum import IntFlag
 import typing as t
+from enum import IntFlag
 
 __all__: t.Sequence[str] = (
     "remove_markdown",
@@ -25,7 +25,7 @@ UNDERLINE_REGEX = re.compile(r"__([\s\S]*?)__")
 SPOILER_REGEX = re.compile(r"\|{2}([\s\S]+?)\|{2}")
 CODE_BLOCK_REGEX = re.compile(r"`([^`]+)`")
 MULTI_CODE_BLOCK_REGEX = re.compile(r"`{3}([\S\s]*?)`{3}")
-QUOTE_REGEX = re.compile(r"\s*\> (.*)",re.DOTALL)
+QUOTE_REGEX = re.compile(r"\s*\> (.*)", re.DOTALL)
 MULTI_QUOTE_REGEX = re.compile(r"\s*\>>> (.*)", re.DOTALL)
 
 
@@ -118,7 +118,7 @@ def remove_multi_code_blocks(content: str) -> str:
     str
         The cleaned string without multiline codeblock formatting.
     """
- 
+
     matches = re.findall(MULTI_CODE_BLOCK_REGEX, content)
     if not matches:
         return content

@@ -1,4 +1,14 @@
-from toolbox.remove_markdown import remove_strikethrough, remove_code_blocks, remove_multi_code_blocks, remove_bold, remove_underlines, remove_underscore_italics, remove_asterisk_italics, remove_spoilers, remove_quotes, remove_multi_quotes
+from toolbox.remove_markdown import remove_asterisk_italics
+from toolbox.remove_markdown import remove_bold
+from toolbox.remove_markdown import remove_code_blocks
+from toolbox.remove_markdown import remove_multi_code_blocks
+from toolbox.remove_markdown import remove_multi_quotes
+from toolbox.remove_markdown import remove_quotes
+from toolbox.remove_markdown import remove_spoilers
+from toolbox.remove_markdown import remove_strikethrough
+from toolbox.remove_markdown import remove_underlines
+from toolbox.remove_markdown import remove_underscore_italics
+
 
 def test_remove_strikethrough():
     assert remove_strikethrough("~~a~~") == "a"
