@@ -3,6 +3,7 @@ from .embeds import *
 from .errors import *
 from .members import *
 from .messages import *
+from .roles import *
 from .strings import *
 
 __version__ = "0.1.2"
