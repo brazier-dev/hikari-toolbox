@@ -92,6 +92,7 @@ def validate_embed(embed: hikari.Embed) -> hikari.Embed:
 
     return embed
 
+
 # MIT License
 #
 # Copyright (c) 2022-present HyperGH
