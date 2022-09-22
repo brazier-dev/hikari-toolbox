@@ -3,7 +3,9 @@ import typing as t
 
 import hikari
 
-__all__: t.Sequence[str] = ("fetch_message_from_link",)
+from .errors import EmbedValidationError
+
+__all__: t.Sequence[str] = ("fetch_message_from_link", "validate_embed")
 
 MESSAGE_LINK_REGEX = re.compile(
     r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)channels[\/][0-9]{1,}[\/][0-9]{1,}[\/][0-9]{1,}"
@@ -40,6 +42,55 @@ async def fetch_message_from_link(message_link: str, *, bot: hikari.RESTAware) -
 
     return await bot.rest.fetch_message(int(channel_id), int(message_id))
 
+
+def validate_embed(embed: hikari.Embed) -> hikari.Embed:
+    """Validate an embed, checking the length of all fields.
+
+    Parameters
+    ----------
+    embed : hikari.Embed
+        The embed to validate.
+
+    Raises
+    ------
+    EmbedValidationError
+        Raised when the embed is invalid.
+
+    Returns
+    -------
+    hikari.Embed
+        The embed that was validated.
+    """
+    if (length := embed.total_length()) > 6000:
+        raise EmbedValidationError(f"Embed total length must be less than 6000 characters, got {length}.")
+
+    if embed.title and (length := len(embed.title)) > 256:
+        raise EmbedValidationError(f"Embed title must be less than 256 characters, got {length}.")
+
+    if embed.description and (length := len(embed.description)) > 4096:
+        raise EmbedValidationError(f"Embed description must be less than 4096 characters, got {length}.")
+
+    if embed.footer and embed.footer.text and (length := len(embed.footer.text)) > 2048:
+        raise EmbedValidationError(f"Embed footer text must be less than 2048 characters, got {length}.")
+
+    if embed.author and embed.author.name and (length := len(embed.author.name)) > 256:
+        raise EmbedValidationError(f"Embed author name must be less than 256 characters, got {length}.")
+
+    if embed.fields:
+        if (field_count := len(embed.fields)) > 25:
+            raise EmbedValidationError(f"Embed must have less than 25 fields, got {field_count}.")
+
+        for i, field in enumerate(embed.fields):
+            if (length := len(field.name)) > 256:
+                raise EmbedValidationError(
+                    f"Embed field {i} ({field.name}): name must be less than 256 characters, got {length}."
+                )
+            if (length := len(field.value)) > 1024:
+                raise EmbedValidationError(
+                    f"Embed field {i} ({field.name}): value must be less than 1024 characters, got {length}."
+                )
+
+    return embed
 
 # MIT License
 #

@@ -1,5 +1,4 @@
 from .commands import *
-from .embeds import *
 from .errors import *
 from .members import *
 from .messages import *
