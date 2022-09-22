@@ -37,20 +37,6 @@ def test_highest_role_no_color():
     assert toolbox.get_member_color(member) == hikari.Color(100)
 
 
-def test_sort_roles():
-    roles = [
-        utils.make_role(position=1),
-        utils.make_role(position=3),
-        utils.make_role(position=2),
-    ]
-
-    roles = toolbox.sort_roles(roles)
-
-    assert roles[0].position == 3
-    assert roles[1].position == 2
-    assert roles[2].position == 1
-
-
 def test_user_possessive_no_s():
     user = mock.Mock(["username"])
     user.username = "RickAstley"
