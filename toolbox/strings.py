@@ -165,17 +165,12 @@ def remove_markdown(content: str, formats: MarkdownFormat = MarkdownFormat.ALL) 
     str
         The cleaned string without markdown formatting.
     """
-    match_list = []
-    for format, regex in format_dict.items():
-        print(format, regex[0])
+    for format, (regex, replace) in format_dict.items():
         if formats & format:
-            search = re.compile(regex[0])
-            match_list.append(re.findall(search, content))
-    for format, replace in format_dict.items():
-        if formats & format:
-            for matches in match_list:
-                for match in matches:
-                    content = re.sub(replace[1].format(match), match, content)
+            search = re.compile(regex)
+            matches = re.findall(search, content)
+            for match in matches:
+                content = re.sub(replace.format(match), match, content)
     return content
 
 
