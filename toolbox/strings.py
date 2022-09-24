@@ -165,9 +165,6 @@ def remove_markdown(content: str, formats: MarkdownFormat = MarkdownFormat.ALL) 
     str
         The cleaned string without markdown formatting.
     """
-    if content is None:
-        return "Message is empty"
-
     match_list = []
     for format in format_dict:
         if formats & format:
