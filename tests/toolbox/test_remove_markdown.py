@@ -1,13 +1,13 @@
-from toolbox.remove_markdown import remove_asterisk_italics
-from toolbox.remove_markdown import remove_bold
-from toolbox.remove_markdown import remove_code_blocks
-from toolbox.remove_markdown import remove_multi_code_blocks
-from toolbox.remove_markdown import remove_multi_quotes
-from toolbox.remove_markdown import remove_quotes
-from toolbox.remove_markdown import remove_spoilers
-from toolbox.remove_markdown import remove_strikethrough
-from toolbox.remove_markdown import remove_underlines
-from toolbox.remove_markdown import remove_underscore_italics
+from toolbox.strings import remove_asterisk_italics
+from toolbox.strings import remove_bold
+from toolbox.strings import remove_code_blocks
+from toolbox.strings import remove_multi_code_blocks
+from toolbox.strings import remove_multi_quotes
+from toolbox.strings import remove_quotes
+from toolbox.strings import remove_spoilers
+from toolbox.strings import remove_strikethrough
+from toolbox.strings import remove_underlines
+from toolbox.strings import remove_underscore_italics
 
 
 def test_remove_strikethrough():
