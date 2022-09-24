@@ -3,7 +3,6 @@ from toolbox.strings import remove_markdown
 
 
 def test_remove_markdown():
-    assert remove_markdown(None, MarkdownFormat.ALL) == "Message is empty"
     assert remove_markdown("", MarkdownFormat.ALL) == ""
     assert remove_markdown("~~a~~", MarkdownFormat.STRIKETHROUGH) == "a"
     assert remove_markdown("||b||", MarkdownFormat.SPOILER) == "b"
