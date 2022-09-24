@@ -1,4 +1,4 @@
-from toolbox.strings import remove_asterisk_italics
+from toolbox.strings import MarkdownFormat
 from toolbox.strings import remove_bold
 from toolbox.strings import remove_code_blocks
 from toolbox.strings import remove_multi_code_blocks
@@ -8,6 +8,8 @@ from toolbox.strings import remove_spoilers
 from toolbox.strings import remove_strikethrough
 from toolbox.strings import remove_underlines
 from toolbox.strings import remove_underscore_italics
+from toolbox.strings import remove_asterisk_italics
+from toolbox.strings import remove_markdown
 
 
 def test_remove_strikethrough():
@@ -143,3 +145,21 @@ def test_remove_multi_quotess():
     assert remove_multi_quotes(">>>e") == ">>>e"
     assert remove_multi_quotes(">>> fgh") == "fgh"
     assert remove_multi_quotes("\n\n\n>>> i j k") == "\n\n\ni j k"
+
+
+def test_remove_markdown():
+    assert remove_markdown(None, MarkdownFormat.ALL) == "Message is empty"
+    assert remove_markdown("", MarkdownFormat.ALL) == ""
+    assert remove_markdown("~~a~~", MarkdownFormat.ALL) == "a"
+    assert remove_markdown("||b||", MarkdownFormat.ALL) == "b"
+    assert remove_markdown("**c**", MarkdownFormat.ALL) == "c"
+    assert remove_markdown("__d__", MarkdownFormat.ALL) == "d"
+    assert remove_markdown("_e_", MarkdownFormat.ALL) == "e"
+    assert remove_markdown("*f*", MarkdownFormat.ALL) == "f"
+    assert remove_markdown("> g", MarkdownFormat.ALL) == "g"
+    assert remove_markdown(">>> h", MarkdownFormat.ALL) == "h"
+    assert remove_markdown("`i`", MarkdownFormat.ALL) == "i"
+    assert remove_markdown("```j```", MarkdownFormat.ALL) == "j"
+    assert remove_markdown("**~~k~~**", MarkdownFormat.ALL) == "k"
+    assert remove_markdown("*_l_*", MarkdownFormat.ALL) == "l"
+    assert remove_markdown("*_m_*", MarkdownFormat.ALL) == "m"
