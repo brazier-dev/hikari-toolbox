@@ -13,5 +13,9 @@ If you think anything is missing, feel free to open an issue or pull request.
  .. toctree::
     :maxdepth: 2
 
-    api_references/utils
+    api_references/commands
+    api_references/members
+    api_references/roles
+    api_references/messages
+    api_references/strings
     api_references/errors
