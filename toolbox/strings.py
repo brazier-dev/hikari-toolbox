@@ -175,11 +175,8 @@ def remove_markdown(content: str, formats: MarkdownFormat = MarkdownFormat.ALL) 
             for matches in match_list:
                 if not matches:
                     continue
-                print(matches)
                 for match in matches:
                     content = re.sub(format_dict[format][1].format(match), match, content)
-                    print(match)
-    print(f"Cleaned: {content}")
     return content
 
 
