@@ -44,7 +44,19 @@ class MarkdownFormat(IntFlag):
     ALL = STRIKETHROUGH | ITALIC | BOLD | UNDERLINE | CODE_BLOCK | MULTI_CODE_BLOCK | QUOTE | MULTI_QUOTE | SPOILER
 
 
-def remove_markdown(content: str) -> str:
+def remove_markdown(content: str, 
+formats=MarkdownFormat.NONE | 
+MarkdownFormat.STRIKETHROUGH |
+MarkdownFormat.ITALIC |
+MarkdownFormat.BOLD |
+MarkdownFormat.UNDERLINE |
+MarkdownFormat.CODE_BLOCK |
+MarkdownFormat.MULTI_CODE_BLOCK |
+MarkdownFormat.QUOTE |
+MarkdownFormat.MULTI_QUOTE |
+MarkdownFormat.SPOILER |
+MarkdownFormat.ALL
+) -> str:
     """Removes the markdown formatting from Discord messages.
 
     Parameters
