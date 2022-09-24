@@ -10,15 +10,15 @@ __all__: t.Sequence[str] = (
     "is_invite",
     "remove_markdown",
     "remove_strikethrough",
-    "remove_code_block",
-    "remove_multi_code_block",
+    "remove_code_blocks",
+    "remove_multi_code_blocks",
     "remove_bold",
-    "remove_underline",
-    "remove_italic_underscore",
-    "remove_italic_asterisk",
-    "remove_spoiler",
-    "remove_quote",
-    "remove_multi_quote",
+    "remove_underlines",
+    "remove_underscore_italics",
+    "remove_asterisk_italics",
+    "remove_spoilers",
+    "remove_quotes",
+    "remove_multi_quotes",
     )
 
 VALID_TIMESTAMP_STYLES: t.Sequence[str] = ("t", "T", "d", "D", "f", "F", "R")
@@ -141,22 +141,11 @@ class MarkdownFormat(IntFlag):
     QUOTE = 64
     MULTI_QUOTE = 128
     SPOILER = 256
-
     ALL = STRIKETHROUGH | ITALIC | BOLD | UNDERLINE | CODE_BLOCK | MULTI_CODE_BLOCK | QUOTE | MULTI_QUOTE | SPOILER
 
 
 def remove_markdown(content: str, 
-formats=MarkdownFormat.NONE | 
-MarkdownFormat.STRIKETHROUGH |
-MarkdownFormat.ITALIC |
-MarkdownFormat.BOLD |
-MarkdownFormat.UNDERLINE |
-MarkdownFormat.CODE_BLOCK |
-MarkdownFormat.MULTI_CODE_BLOCK |
-MarkdownFormat.QUOTE |
-MarkdownFormat.MULTI_QUOTE |
-MarkdownFormat.SPOILER |
-MarkdownFormat.ALL
+formats: MarkdownFormat = MarkdownFormat.ALL
 ) -> str:
     """Removes the markdown formatting from Discord messages.
 
@@ -164,6 +153,8 @@ MarkdownFormat.ALL
     ----------
     content : str
         The `str` object, which needs their content cleaned from Discord's markdown formatting.
+    formats : MarkdownFormat
+        The `IntFlag` of the kind of formatting that needs to be removed. Default is ALL.
 
     Returns
     -------
@@ -172,6 +163,18 @@ MarkdownFormat.ALL
     """
     if content is None:
         return "Message is empty"
+    if (formats & MarkdownFormat.ALL):
+        content = remove_spoilers(content)
+        content = remove_multi_quotes(content)
+        content = remove_quotes(content)
+        content = remove_multi_code_blocks(content)
+        content = remove_code_blocks(content)
+        content = remove_underlines(content)
+        content = remove_bold(content)
+        content = remove_asterisk_italics(content)
+        content = remove_underscore_italics(content)
+        content = remove_strikethrough(content)
+        return content
 
 
 def remove_strikethrough(content: str) -> str:
