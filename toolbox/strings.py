@@ -137,16 +137,16 @@ class MarkdownFormat(IntFlag):
 
 
 format_dict = {
-    MarkdownFormat.MULTI_QUOTE: (r"\s*\>>> ([\s\S]+?)", ">>> {0}"),
-    MarkdownFormat.QUOTE: (r"\s*\> ([\s\S]+?)", "> {0}"),
-    MarkdownFormat.MULTI_CODE_BLOCK: (r"`{3}([\S\s]+?)`{3}", "```{0}```"),
-    MarkdownFormat.CODE_BLOCK: (r"`([^`]+?)`", "`{0}`"),
-    MarkdownFormat.BOLD: (r"\*{2}([\s\S]+?)\*{2}", "\*\*{0}\*\*"),
-    MarkdownFormat.UNDERLINE: (r"__([\s\S]+?)__", "__{0}__"),
-    MarkdownFormat.STRIKETHROUGH: (r"~~([\S\s]+?)~~", "~~{0}~~"),
-    MarkdownFormat.ITALIC_UNDERSCORE: (r"_([^_]+?)_", "_{0}_"),
-    MarkdownFormat.ITALIC_ASTERISK: (r"\*([^*]+?)\*", "\*{0}\*"),
-    MarkdownFormat.SPOILER: (r"\|{2}([\s\S]+?)\|{2}", "\|\|{0}\|\|"),
+    MarkdownFormat.MULTI_QUOTE: (re.compile(r"\s*\>>> ([\s\S]+?)"), ">>> {0}"),
+    MarkdownFormat.QUOTE: (re.compile(r"\s*\> ([\s\S]+?)"), "> {0}"),
+    MarkdownFormat.MULTI_CODE_BLOCK: (re.compile(r"`{3}([\S\s]+?)`{3}"), "```{0}```"),
+    MarkdownFormat.CODE_BLOCK: (re.compile(r"`([^`]+?)`"), "`{0}`"),
+    MarkdownFormat.BOLD: (re.compile(r"\*{2}([\s\S]+?)\*{2}"), "\*\*{0}\*\*"),
+    MarkdownFormat.UNDERLINE: (re.compile(r"__([\s\S]+?)__"), "__{0}__"),
+    MarkdownFormat.STRIKETHROUGH: (re.compile(r"~~([\S\s]+?)~~"), "~~{0}~~"),
+    MarkdownFormat.ITALIC_UNDERSCORE: (re.compile(r"_([^_]+?)_"), "_{0}_"),
+    MarkdownFormat.ITALIC_ASTERISK: (re.compile(r"\*([^*]+?)\*"), "\*{0}\*"),
+    MarkdownFormat.SPOILER: (re.compile(r"\|{2}([\s\S]+?)\|{2}"), "\|\|{0}\|\|"),
 }
 
 
@@ -168,8 +168,7 @@ def remove_markdown(content: str, formats: MarkdownFormat = MarkdownFormat.ALL) 
     """
     for format, (regex, replace) in format_dict.items():
         if formats & format:
-            search = re.compile(regex)
-            matches = re.findall(search, content)
+            matches = re.findall(regex, content)
             for match in matches:
                 content = re.sub(replace.format(match), match, content)
     return content
