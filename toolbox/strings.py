@@ -21,6 +21,74 @@ LINK_REGEX = re.compile(
 INVITE_REGEX = re.compile(r"(?:https?://)?discord(?:app)?\.(?:com/invite|gg)/[a-zA-Z0-9]+/?")
 
 
+class MarkdownFormat(IntFlag):
+    """An Enum to flag strings with the types of formatting that should be removed."""
+
+    NONE = 0
+    """Refers to no formatting."""
+
+    STRIKETHROUGH = 1
+    """Used to remove strikethroughs caused by 2 tildes."""
+
+    ITALIC_UNDERSCORE = 2
+    """Used to remove italic caused by underscores."""
+
+    ITALIC_ASTERISK = 4
+    """Used to remove italic caused by asterisks."""
+
+    BOLD = 8
+    """Used to remove bold caused by 2 asterisks."""
+
+    UNDERLINE = 16
+    """Used to remove underlining caused by 2 underscores."""
+
+    CODE_BLOCK = 32
+    """Used to remove code blocks caused by backticks."""
+
+    MULTI_CODE_BLOCK = 64
+    """Used to remove multiline code blocks caused by 3 backticks."""
+
+    QUOTE = 128
+    """Used to remove quotes caused by a bigger than at the start of the line followed by a whitespace character."""
+
+    MULTI_QUOTE = 256
+    """Used to remove multiline quotes caused by 3 bigger thans at the start of the line followed by a whitespace character."""
+
+    SPOILER = 512
+    """Used to remove spoilers caused by 2 pipes."""
+
+    ALL = (
+        STRIKETHROUGH
+        | ITALIC_UNDERSCORE
+        | ITALIC_ASTERISK
+        | BOLD
+        | UNDERLINE
+        | CODE_BLOCK
+        | MULTI_CODE_BLOCK
+        | QUOTE
+        | MULTI_QUOTE
+        | SPOILER
+    )
+    """Used to remove all possible formatting."""
+
+
+_FORMAT_DICT = {
+    # First value is the regex pattern of the affiliated enum flag, the match is WITHOUT the formatting that causes it
+    # Second value is the string that is being replaced in the originally sent string by the match alone.
+    # {0} is a placeholder for the match
+    MarkdownFormat.MULTI_QUOTE: (re.compile(r"\s*\>>> ([\s\S]+?)"), ">>> {0}"),
+    MarkdownFormat.QUOTE: (re.compile(r"\s*\> ([\s\S]+?)"), "> {0}"),
+    MarkdownFormat.MULTI_CODE_BLOCK: (re.compile(r"`{3}([\S\s]+?)`{3}"), "```{0}```"),
+    MarkdownFormat.CODE_BLOCK: (re.compile(r"`([^`]+?)`"), "`{0}`"),
+    MarkdownFormat.BOLD: (re.compile(r"\*{2}([\s\S]+?)\*{2}"), "\*\*{0}\*\*"),
+    MarkdownFormat.UNDERLINE: (re.compile(r"__([\s\S]+?)__"), "__{0}__"),
+    MarkdownFormat.STRIKETHROUGH: (re.compile(r"~~([\S\s]+?)~~"), "~~{0}~~"),
+    MarkdownFormat.ITALIC_UNDERSCORE: (re.compile(r"_([^_]+?)_"), "_{0}_"),
+    MarkdownFormat.ITALIC_ASTERISK: (re.compile(r"\*([^*]+?)\*"), "\*{0}\*"),
+    MarkdownFormat.SPOILER: (re.compile(r"\|{2}([\s\S]+?)\|{2}"), "\|\|{0}\|\|"),
+}
+
+
 def format_dt(time: datetime.datetime, style: t.Optional[str] = None) -> str:
     """
     Convert a datetime into a Discord timestamp.
@@ -110,71 +178,6 @@ def is_invite(string: str, *, fullmatch: bool = True) -> bool:
     return False
 
 
-class MarkdownFormat(IntFlag):
-    """An Enum to flag strings with the types of formatting that should be removed."""
-
-    NONE = 0
-    """Refers to no formatting."""
-
-    STRIKETHROUGH = 1
-    """Used to remove strikethroughs caused by 2 tildes."""
-
-    ITALIC_UNDERSCORE = 2
-    """Used to remove italic caused by underscores."""
-
-    ITALIC_ASTERISK = 4
-    """Used to remove italic caused by asterisks."""
-
-    BOLD = 8
-    """Used to remove bold caused by 2 asterisks."""
-
-    UNDERLINE = 16
-    """Used to remove underlining caused by 2 underscores."""
-
-    CODE_BLOCK = 32
-    """Used to remove code blocks caused by backticks."""
-
-    MULTI_CODE_BLOCK = 64
-    """Used to remove multiline code blocks caused by 3 backticks."""
-
-    QUOTE = 128
-    """Used to remove quotes caused by a bigger than at the start of the line followed by a whitespace character."""
-
-    MULTI_QUOTE = 256
-    """Used to remove multiline quotes caused by 3 bigger thans at the start of the line followed by a whitespace character."""
-
-    SPOILER = 512
-    """Used to remove spoilers caused by 2 pipes."""
-
-    ALL = (
-        STRIKETHROUGH
-        | ITALIC_UNDERSCORE
-        | ITALIC_ASTERISK
-        | BOLD
-        | UNDERLINE
-        | CODE_BLOCK
-        | MULTI_CODE_BLOCK
-        | QUOTE
-        | MULTI_QUOTE
-        | SPOILER
-    )
-    """Used to remove all possible formatting."""
-
-
-_format_dict = {
-    MarkdownFormat.MULTI_QUOTE: (re.compile(r"\s*\>>> ([\s\S]+?)"), ">>> {0}"),
-    MarkdownFormat.QUOTE: (re.compile(r"\s*\> ([\s\S]+?)"), "> {0}"),
-    MarkdownFormat.MULTI_CODE_BLOCK: (re.compile(r"`{3}([\S\s]+?)`{3}"), "```{0}```"),
-    MarkdownFormat.CODE_BLOCK: (re.compile(r"`([^`]+?)`"), "`{0}`"),
-    MarkdownFormat.BOLD: (re.compile(r"\*{2}([\s\S]+?)\*{2}"), "\*\*{0}\*\*"),
-    MarkdownFormat.UNDERLINE: (re.compile(r"__([\s\S]+?)__"), "__{0}__"),
-    MarkdownFormat.STRIKETHROUGH: (re.compile(r"~~([\S\s]+?)~~"), "~~{0}~~"),
-    MarkdownFormat.ITALIC_UNDERSCORE: (re.compile(r"_([^_]+?)_"), "_{0}_"),
-    MarkdownFormat.ITALIC_ASTERISK: (re.compile(r"\*([^*]+?)\*"), "\*{0}\*"),
-    MarkdownFormat.SPOILER: (re.compile(r"\|{2}([\s\S]+?)\|{2}"), "\|\|{0}\|\|")
-}
-
-
 def remove_markdown(content: str, formats: MarkdownFormat = MarkdownFormat.ALL) -> str:
     """
     Removes the markdown formatting from Discord messages.
@@ -191,7 +194,7 @@ def remove_markdown(content: str, formats: MarkdownFormat = MarkdownFormat.ALL) 
     str
         The cleaned string without markdown formatting.
     """
-    for format, (regex, replace) in _format_dict.items():
+    for format, (regex, replace) in _FORMAT_DICT.items():
         if formats & format:
             matches = re.findall(regex, content)
             for match in matches:
