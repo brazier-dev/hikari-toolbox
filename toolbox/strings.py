@@ -73,9 +73,9 @@ class MarkdownFormat(IntFlag):
 
 
 _FORMAT_DICT = {
-    # First value is the regex pattern of the affiliated enum flag, the match is WITHOUT the formatting that causes it
+    # First value is the regex pattern of the affiliated enum flag, the match is WITHOUT the formatting that causes it.
     # Second value is the string that is being replaced in the originally sent string by the match alone.
-    # {0} is a placeholder for the match
+    # {0} is a placeholder for the match.
     MarkdownFormat.MULTI_QUOTE: (re.compile(r"\s*\>>> ([\s\S]+?)"), ">>> {0}"),
     MarkdownFormat.QUOTE: (re.compile(r"\s*\> ([\s\S]+?)"), "> {0}"),
     MarkdownFormat.MULTI_CODE_BLOCK: (re.compile(r"`{3}([\S\s]+?)`{3}"), "```{0}```"),
@@ -187,7 +187,7 @@ def remove_markdown(content: str, formats: MarkdownFormat = MarkdownFormat.ALL) 
     content : str
         The `str` object, which needs their content cleaned from Discord's markdown formatting.
     formats : MarkdownFormat
-        The `IntFlag` of the formatting that needs to be removed. Default is ALL.
+        The `IntFlag` of the formatting that needs to be removed. Default is `MarkdownFormat.ALL`
 
     Returns
     -------
