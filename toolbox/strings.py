@@ -72,7 +72,7 @@ class MarkdownFormat(IntFlag):
     """Used to remove all possible formatting."""
 
 
-_FORMAT_DICT = {
+FORMAT_DICT = {
     # First value is the regex pattern of the affiliated enum flag, the match is WITHOUT the formatting that causes it.
     # Second value is the string that is being replaced in the originally sent string by the match alone.
     # {0} is a placeholder for the match.
@@ -194,7 +194,7 @@ def remove_markdown(content: str, formats: MarkdownFormat = MarkdownFormat.ALL) 
     str
         The cleaned string without markdown formatting.
     """
-    for format, (regex, replace) in _FORMAT_DICT.items():
+    for format, (regex, replace) in FORMAT_DICT.items():
         if formats & format:
             matches = re.findall(regex, content)
             for match in matches:
