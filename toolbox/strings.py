@@ -137,21 +137,22 @@ class MarkdownFormat(IntFlag):
 
 
 format_dict = {
-    MarkdownFormat.MULTI_QUOTE: [r"\s*\>>> ([\s\S]+?)", ">>> {0}"],
-    MarkdownFormat.QUOTE: [r"\s*\> ([\s\S]+?)", "> {0}"],
-    MarkdownFormat.MULTI_CODE_BLOCK: [r"`{3}([\S\s]+?)`{3}", "```{0}```"],
-    MarkdownFormat.CODE_BLOCK: [r"`([^`]+?)`", "`{0}`"],
-    MarkdownFormat.BOLD: [r"\*{2}([\s\S]+?)\*{2}", "\*\*{0}\*\*"],
-    MarkdownFormat.UNDERLINE: [r"__([\s\S]+?)__", "__{0}__"],
-    MarkdownFormat.STRIKETHROUGH: [r"~~([\S\s]+?)~~", "~~{0}~~"],
-    MarkdownFormat.ITALIC_UNDERSCORE: [r"_([^_]+?)_", "_{0}_"],
-    MarkdownFormat.ITALIC_ASTERISK: [r"\*([^*]+?)\*", "\*{0}\*"],
-    MarkdownFormat.SPOILER: [r"\|{2}([\s\S]+?)\|{2}", "\|\|{0}\|\|"],
+    MarkdownFormat.MULTI_QUOTE: (r"\s*\>>> ([\s\S]+?)", ">>> {0}"),
+    MarkdownFormat.QUOTE: (r"\s*\> ([\s\S]+?)", "> {0}"),
+    MarkdownFormat.MULTI_CODE_BLOCK: (r"`{3}([\S\s]+?)`{3}", "```{0}```"),
+    MarkdownFormat.CODE_BLOCK: (r"`([^`]+?)`", "`{0}`"),
+    MarkdownFormat.BOLD: (r"\*{2}([\s\S]+?)\*{2}", "\*\*{0}\*\*"),
+    MarkdownFormat.UNDERLINE: (r"__([\s\S]+?)__", "__{0}__"),
+    MarkdownFormat.STRIKETHROUGH: (r"~~([\S\s]+?)~~", "~~{0}~~"),
+    MarkdownFormat.ITALIC_UNDERSCORE: (r"_([^_]+?)_", "_{0}_"),
+    MarkdownFormat.ITALIC_ASTERISK: (r"\*([^*]+?)\*", "\*{0}\*"),
+    MarkdownFormat.SPOILER: (r"\|{2}([\s\S]+?)\|{2}", "\|\|{0}\|\|"),
 }
 
 
 def remove_markdown(content: str, formats: MarkdownFormat = MarkdownFormat.ALL) -> str:
-    """Removes the markdown formatting from Discord messages.
+    """
+    Removes the markdown formatting from Discord messages.
 
     Parameters
     ----------
