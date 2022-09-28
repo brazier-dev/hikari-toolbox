@@ -27,7 +27,7 @@ class MarkdownFormat(IntFlag):
     NONE = 0
     """Refers to no formatting."""
 
-    STRIKETHROUGH = 1
+    STRIKETHROUGH = 1 << 0
     """Used to remove strikethroughs caused by 2 tildes."""
 
     ITALIC_UNDERSCORE = 2
