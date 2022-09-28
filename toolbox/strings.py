@@ -42,7 +42,7 @@ class MarkdownFormat(IntFlag):
     UNDERLINE = 1 << 4
     """Used to remove underlining caused by 2 underscores."""
 
-    CODE_BLOCK = 32
+    CODE_BLOCK = 1 << 5
     """Used to remove code blocks caused by backticks."""
 
     MULTI_CODE_BLOCK = 64
