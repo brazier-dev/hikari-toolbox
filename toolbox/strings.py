@@ -36,7 +36,7 @@ class MarkdownFormat(IntFlag):
     ITALIC_ASTERISK = 1 << 2
     """Used to remove italic caused by asterisks."""
 
-    BOLD = 8
+    BOLD = 1 << 3
     """Used to remove bold caused by 2 asterisks."""
 
     UNDERLINE = 16
