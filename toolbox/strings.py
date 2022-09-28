@@ -54,7 +54,7 @@ class MarkdownFormat(IntFlag):
     MULTI_QUOTE = 1 << 8
     """Used to remove multiline quotes caused by 3 bigger thans at the start of the line followed by a whitespace character."""
 
-    SPOILER = 512
+    SPOILER = 1 << 9
     """Used to remove spoilers caused by 2 pipes."""
 
     ALL = (
