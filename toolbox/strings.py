@@ -30,7 +30,7 @@ class MarkdownFormat(IntFlag):
     STRIKETHROUGH = 1 << 0
     """Used to remove strikethroughs caused by 2 tildes."""
 
-    ITALIC_UNDERSCORE = 2
+    ITALIC_UNDERSCORE = 1 << 1
     """Used to remove italic caused by underscores."""
 
     ITALIC_ASTERISK = 4
