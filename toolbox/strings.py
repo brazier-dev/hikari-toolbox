@@ -39,7 +39,7 @@ class MarkdownFormat(IntFlag):
     BOLD = 1 << 3
     """Used to remove bold caused by 2 asterisks."""
 
-    UNDERLINE = 16
+    UNDERLINE = 1 << 4
     """Used to remove underlining caused by 2 underscores."""
 
     CODE_BLOCK = 32
