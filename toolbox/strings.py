@@ -48,7 +48,7 @@ class MarkdownFormat(IntFlag):
     MULTI_CODE_BLOCK = 1 << 6
     """Used to remove multiline code blocks caused by 3 backticks."""
 
-    QUOTE = 128
+    QUOTE = 1 << 7
     """Used to remove quotes caused by a bigger than at the start of the line followed by a whitespace character."""
 
     MULTI_QUOTE = 256
