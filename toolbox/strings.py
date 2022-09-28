@@ -51,7 +51,7 @@ class MarkdownFormat(IntFlag):
     QUOTE = 1 << 7
     """Used to remove quotes caused by a bigger than at the start of the line followed by a whitespace character."""
 
-    MULTI_QUOTE = 256
+    MULTI_QUOTE = 1 << 8
     """Used to remove multiline quotes caused by 3 bigger thans at the start of the line followed by a whitespace character."""
 
     SPOILER = 512
