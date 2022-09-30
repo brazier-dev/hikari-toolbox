@@ -7,7 +7,7 @@ import hikari
 from .errors import CacheFailureError
 from .roles import sort_roles
 
-__all__: t.Sequence[str] = ("get_member_color", "is_above", "get_possessive")
+__all__: t.Sequence[str] = ("get_member_color", "is_above", "get_possessive", "calculate_permissions", "can_moderate")
 
 
 def get_member_color(member: hikari.Member) -> hikari.Color:
