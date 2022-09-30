@@ -22,6 +22,7 @@ def sort_roles(roles: t.Sequence[hikari.Role], ascending: bool = False) -> t.Seq
     """
     return sorted(roles, key=lambda r: r.position, reverse=not ascending)
 
+
 # MIT License
 #
 # Copyright (c) 2022-present HyperGH

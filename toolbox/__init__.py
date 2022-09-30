@@ -5,7 +5,7 @@ from .messages import *
 from .roles import *
 from .strings import *
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 # MIT License
 #
