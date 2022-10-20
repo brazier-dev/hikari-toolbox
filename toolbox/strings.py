@@ -76,16 +76,16 @@ FORMAT_DICT = {
     # First value is the regex pattern of the affiliated enum flag, the match is WITHOUT the formatting that causes it.
     # Second value is the string that is being replaced in the originally sent string by the match alone.
     # {0} is a placeholder for the match.
-    MarkdownFormat.MULTI_QUOTE: (re.compile(r"\s*\>>> ([\s\S]+?)"), ">>> {0}"),
-    MarkdownFormat.QUOTE: (re.compile(r"\s*\> ([\s\S]+?)"), "> {0}"),
-    MarkdownFormat.MULTI_CODE_BLOCK: (re.compile(r"`{3}([\S\s]+?)`{3}"), "```{0}```"),
-    MarkdownFormat.CODE_BLOCK: (re.compile(r"`([^`]+?)`"), "`{0}`"),
-    MarkdownFormat.BOLD: (re.compile(r"\*{2}([\s\S]+?)\*{2}"), "\*\*{0}\*\*"),
-    MarkdownFormat.UNDERLINE: (re.compile(r"__([\s\S]+?)__"), "__{0}__"),
-    MarkdownFormat.STRIKETHROUGH: (re.compile(r"~~([\S\s]+?)~~"), "~~{0}~~"),
-    MarkdownFormat.ITALIC_UNDERSCORE: (re.compile(r"_([^_]+?)_"), "_{0}_"),
-    MarkdownFormat.ITALIC_ASTERISK: (re.compile(r"\*([^*]+?)\*"), "\*{0}\*"),
-    MarkdownFormat.SPOILER: (re.compile(r"\|{2}([\s\S]+?)\|{2}"), "\|\|{0}\|\|"),
+    MarkdownFormat.MULTI_QUOTE: (re.compile(r"\s*\>>> ([\s\S]+)"), ">>> {0}"),
+    MarkdownFormat.QUOTE: (re.compile(r"\s*\> ([\s\S]+)"), "> {0}"),
+    MarkdownFormat.MULTI_CODE_BLOCK: (re.compile(r"`{3}([\S\s]+)`{3}"), "```{0}```"),
+    MarkdownFormat.CODE_BLOCK: (re.compile(r"`([^`]+)`"), "`{0}`"),
+    MarkdownFormat.BOLD: (re.compile(r"\*{2}([\s\S]+)\*{2}"), "\*\*{0}\*\*"),
+    MarkdownFormat.UNDERLINE: (re.compile(r"__([\s\S]+)__"), "__{0}__"),
+    MarkdownFormat.STRIKETHROUGH: (re.compile(r"~~([\S\s]+)~~"), "~~{0}~~"),
+    MarkdownFormat.ITALIC_UNDERSCORE: (re.compile(r"_([^_]+)_"), "_{0}_"),
+    MarkdownFormat.ITALIC_ASTERISK: (re.compile(r"\*([^*]+)\*"), "\*{0}\*"),
+    MarkdownFormat.SPOILER: (re.compile(r"\|{2}([\s\S]+)\|{2}"), "\|\|{0}\|\|"),
 }
 
 
