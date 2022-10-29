@@ -7,7 +7,7 @@ import hikari
 from .errors import CacheFailureError
 from .roles import sort_roles
 
-__all__: t.Sequence[str] = ("get_member_color", "is_above", "get_possessive")
+__all__: t.Sequence[str] = ("get_member_color", "is_above", "get_possessive", "calculate_permissions", "can_moderate")
 
 
 def get_member_color(member: hikari.Member) -> hikari.Color:
@@ -188,7 +188,12 @@ def can_moderate(
     if permissions is hikari.Permissions.NONE:
         return True
 
-    return bool(calculate_permissions(moderator) & permissions)
+    mod_perms = calculate_permissions(moderator)
+
+    if mod_perms & hikari.Permissions.ADMINISTRATOR:
+        return True
+
+    return bool(mod_perms & permissions)
 
 
 # MIT License

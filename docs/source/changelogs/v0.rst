@@ -4,6 +4,21 @@ Versions 0.1+ Changelog
 
 These are all the changelogs for releases of hikari-toolbox (from 0.1+).
 
+Version 0.1.3
+=============
+
+- Divided the library up into seperate files.
+- Fixed a bug where `can_moderate` and `calculate_permissions` were missing from `__all__`.
+
+----
+
+Version 0.1.2
+=============
+
+- Added `as_command_choices`.
+- Fixed incorrect calculation of overrides in `calculate_permissions`.
+
+
 ----
 
 Version 0.1.0
