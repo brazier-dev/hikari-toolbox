@@ -188,7 +188,12 @@ def can_moderate(
     if permissions is hikari.Permissions.NONE:
         return True
 
-    return bool(calculate_permissions(moderator) & permissions)
+    mod_perms = calculate_permissions(moderator)
+
+    if mod_perms & hikari.Permissions.ADMINISTRATOR:
+        return True
+
+    return bool(mod_perms & permissions)
 
 
 # MIT License
