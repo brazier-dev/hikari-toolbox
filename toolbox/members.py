@@ -80,7 +80,9 @@ def get_possessive(user: hikari.User) -> str:
     return f"{name}'{'s' if not name.endswith('s') else ''}"
 
 
-def calculate_permissions(member: hikari.Member, channel: t.Optional[hikari.GuildChannel] = None) -> hikari.Permissions:
+def calculate_permissions(
+    member: hikari.Member, channel: t.Optional[hikari.PermissibleGuildChannel] = None
+) -> hikari.Permissions:
     """Calculate the permissions of a member.
     If a channel is provided, channel overwrites will be taken into account.
 
