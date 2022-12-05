@@ -4,6 +4,13 @@ Versions 0.1+ Changelog
 
 These are all the changelogs for releases of hikari-toolbox (from 0.1+).
 
+Version 0.1.4
+=============
+
+- Fix `can_moderate` not accounting for `ADMINISTRATOR` permissions.
+- Fix assertion error in `calculate_permissions` when there are no overrides for `@everyone`.
+- Bump `hikari` to `v.2.0.0.dev113`.
+
 Version 0.1.3
 =============
 
