@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import typing as t
 
 import hikari
@@ -5,7 +7,9 @@ import functools
 
 __all__: t.Sequence[str] = ["consume_event"]
 
-P = t.ParamSpec("P")
+if t.TYPE_CHECKING:
+    P = t.ParamSpec("P")
+
 T = t.TypeVar("T")
 
 
