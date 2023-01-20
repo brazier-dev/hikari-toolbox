@@ -9,8 +9,7 @@ __all__: t.Sequence[str] = ["consume_event"]
 
 if t.TYPE_CHECKING:
     P = t.ParamSpec("P")
-
-T = t.TypeVar("T")
+    T = t.TypeVar("T")
 
 
 def consume_event(callback: t.Callable[P, T]) -> t.Callable[t.Concatenate[hikari.Event, P], T]:
