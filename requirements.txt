@@ -1,1 +1,2 @@
 hikari>=2.0.0.dev113
+typing_extensions>=4.4.0
