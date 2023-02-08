@@ -30,6 +30,12 @@ test_dict = {
     "**__test 25__**": (MarkdownFormat.ALL, "test 25"),
     "__test 26__ __test 26__": (MarkdownFormat.UNDERLINE, "test 26 test 26"),
     "**test 27** **test 27**": (MarkdownFormat.BOLD, "test 27 test 27"),
+    "~~test 28~~ __test 28__": (MarkdownFormat.ALL, "test 28 test 28"),
+    "||test 29|| ||test 29||": (MarkdownFormat.ALL, "test 29 test 29"),
+    "```test 30``` ```test 30```": (MarkdownFormat.ALL, "test 30 test 30"),
+    "`test 31` `test 31`": (MarkdownFormat.ALL, "test 31 test 31"),
+    "`test 32` `test 32`": (MarkdownFormat.ITALIC_ASTERISK, "`test 32` `test 32`"),
+    ">>> test 33 *test 33*": (MarkdownFormat.ALL, "test 33 test 33"),
 }
 
 
