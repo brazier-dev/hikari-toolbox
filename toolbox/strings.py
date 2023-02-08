@@ -178,7 +178,7 @@ def is_invite(string: str, *, fullmatch: bool = True) -> bool:
     return False
 
 
-def remove_markdown(content: str, formats: MarkdownFormat | None = MarkdownFormat.ALL) -> str:
+def remove_markdown(content: str, formats: MarkdownFormat = MarkdownFormat.ALL) -> str:
     """
     Removes the markdown formatting from Discord messages.
 
