@@ -80,8 +80,8 @@ FORMAT_DICT = {
     MarkdownFormat.QUOTE: (re.compile(r"\s*\> ([\s\S]+)"), "> {0}"),
     MarkdownFormat.MULTI_CODE_BLOCK: (re.compile(r"`{3}([\S\s]+)`{3}"), "```{0}```"),
     MarkdownFormat.CODE_BLOCK: (re.compile(r"`([^`]+)`"), "`{0}`"),
-    MarkdownFormat.BOLD: (re.compile(r"\*{2}([\s\S]+)\*{2}"), "\*\*{0}\*\*"),
-    MarkdownFormat.UNDERLINE: (re.compile(r"__([\s\S]+)__"), "__{0}__"),
+    MarkdownFormat.BOLD: (re.compile(r"\*{2}([^*]+)\*{2}"), "\*\*{0}\*\*"),
+    MarkdownFormat.UNDERLINE: (re.compile(r"__([^_]+)__"), "__{0}__"),
     MarkdownFormat.STRIKETHROUGH: (re.compile(r"~~([\S\s]+)~~"), "~~{0}~~"),
     MarkdownFormat.ITALIC_UNDERSCORE: (re.compile(r"_([^_]+)_"), "_{0}_"),
     MarkdownFormat.ITALIC_ASTERISK: (re.compile(r"\*([^*]+)\*"), "\*{0}\*"),
@@ -178,7 +178,7 @@ def is_invite(string: str, *, fullmatch: bool = True) -> bool:
     return False
 
 
-def remove_markdown(content: str, formats: MarkdownFormat = MarkdownFormat.ALL) -> str:
+def remove_markdown(content: str, formats: MarkdownFormat | None = MarkdownFormat.ALL) -> str:
     """
     Removes the markdown formatting from Discord messages.
 
