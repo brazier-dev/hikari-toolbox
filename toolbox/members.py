@@ -80,7 +80,9 @@ def get_possessive(user: hikari.User) -> str:
     return f"{name}'{'s' if not name.endswith('s') else ''}"
 
 
-def calculate_permissions(member: hikari.Member, channel: t.Optional[hikari.GuildChannel] = None) -> hikari.Permissions:
+def calculate_permissions(
+    member: hikari.Member, channel: t.Optional[hikari.PermissibleGuildChannel] = None
+) -> hikari.Permissions:
     """Calculate the permissions of a member.
     If a channel is provided, channel overwrites will be taken into account.
 
@@ -122,10 +124,9 @@ def calculate_permissions(member: hikari.Member, channel: t.Optional[hikari.Guil
     if not channel:  # End of role-based permissions
         return permissions
 
-    overwrite_everyone = channel.permission_overwrites.get(channel.guild_id)
-    assert overwrite_everyone is not None
-    permissions &= ~overwrite_everyone.deny
-    permissions |= overwrite_everyone.allow
+    if overwrite_everyone := channel.permission_overwrites.get(channel.guild_id):
+        permissions &= ~overwrite_everyone.deny
+        permissions |= overwrite_everyone.allow
 
     overwrites = hikari.PermissionOverwrite(  # Collect role overwrites here
         id=hikari.Snowflake(69),
