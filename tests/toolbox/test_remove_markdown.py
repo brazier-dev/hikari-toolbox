@@ -1,34 +1,43 @@
 from toolbox.strings import MarkdownFormat
 from toolbox.strings import remove_markdown
 
+test_dict = {
+    "" : (MarkdownFormat.ALL, ""),
+    "~~test 1~~" : (MarkdownFormat.STRIKETHROUGH, "test 1"),
+    "||test 2||" : (MarkdownFormat.SPOILER, "test 2"),
+    "**test 3**" : (MarkdownFormat.BOLD, "test 3"),
+    "__test 4__" : (MarkdownFormat.UNDERLINE, "test 4"),
+    "_test 5_" : (MarkdownFormat.ITALIC_UNDERSCORE, "test 5"),
+    "*test 6*" : (MarkdownFormat.ITALIC_ASTERISK, "test 6"),
+    "> test 7" : (MarkdownFormat.QUOTE, "test 7"),
+    ">>> test 8" : (MarkdownFormat.MULTI_QUOTE, "test 8"),
+    "`test 9`" : (MarkdownFormat.CODE_BLOCK, "test 9"),
+    "```test 10```" : (MarkdownFormat.MULTI_CODE_BLOCK, "test 10"),
+    "**~~test 11~~**" : (MarkdownFormat.BOLD | MarkdownFormat.STRIKETHROUGH, "test 11"),
+    "*_test 12_*" : (MarkdownFormat.ITALIC_ASTERISK | MarkdownFormat.ITALIC_UNDERSCORE, "test 12"),
+    "~~test 13~~": (None, "test 13"),
+    "||test 14||": (None, "test 14"),
+    "**test 15**" : (None, "test 15"),
+    "__test 16__" : (None, "test 16"),
+    "_test 17_" : (None, "test 17"),
+    "*test 18*" : (None, "test 18"),
+    "> test 19" : (None, "test 19"),
+    ">>> test 20" : (None, "test 20"),
+    "`test 21`": (None, "test 21"),
+    "```test 22```" : (None, "test 22"),
+    "**~~test 23~~**" : (None, "test 23"),
+    "*_test 24_*": (None, "test 24"),
+    "**__test 25__**": (None, "test 25"),
+    "__test 26__ __test 26__": (MarkdownFormat.UNDERLINE, "test 26 test 26"),
+    "**test 27** **test 27**": (MarkdownFormat.BOLD, "test 27 test 27")
+}
 
 def test_remove_markdown():
-    assert remove_markdown("", MarkdownFormat.ALL) == ""
-    assert remove_markdown("~~a~~", MarkdownFormat.STRIKETHROUGH) == "a"
-    assert remove_markdown("||b||", MarkdownFormat.SPOILER) == "b"
-    assert remove_markdown("**c**", MarkdownFormat.BOLD) == "c"
-    assert remove_markdown("__d__", MarkdownFormat.UNDERLINE) == "d"
-    assert remove_markdown("_e_", MarkdownFormat.ITALIC_UNDERSCORE) == "e"
-    assert remove_markdown("*f*", MarkdownFormat.ITALIC_ASTERISK) == "f"
-    assert remove_markdown("> g", MarkdownFormat.QUOTE) == "g"
-    assert remove_markdown(">>> h", MarkdownFormat.MULTI_QUOTE) == "h"
-    assert remove_markdown("`i`", MarkdownFormat.CODE_BLOCK) == "i"
-    assert remove_markdown("```j```", MarkdownFormat.MULTI_CODE_BLOCK) == "j"
-    assert remove_markdown("**~~k~~**", MarkdownFormat.BOLD | MarkdownFormat.STRIKETHROUGH) == "k"
-    assert remove_markdown("*_l_*", MarkdownFormat.ITALIC_ASTERISK | MarkdownFormat.ITALIC_UNDERSCORE) == "l"
-    assert remove_markdown("~~a~~") == "a"
-    assert remove_markdown("||b||") == "b"
-    assert remove_markdown("**c**") == "c"
-    assert remove_markdown("__d__") == "d"
-    assert remove_markdown("_e_") == "e"
-    assert remove_markdown("*f*") == "f"
-    assert remove_markdown("> g") == "g"
-    assert remove_markdown(">>> h") == "h"
-    assert remove_markdown("`i`") == "i"
-    assert remove_markdown("```j```") == "j"
-    assert remove_markdown("**~~k~~**") == "k"
-    assert remove_markdown("*_l_*") == "l"
-    assert remove_markdown("**__h__**") == "h"
+    for test, (format, result) in test_dict.items():
+        if not format:
+            assert remove_markdown(test) == result
+        else:
+            assert remove_markdown(test, format) == result
 
 
 # MIT License
