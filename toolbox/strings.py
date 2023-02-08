@@ -204,7 +204,7 @@ def remove_markdown(content: str, formats: MarkdownFormat = MarkdownFormat.ALL) 
     return content
 
 
-def remove_quote(content: str, formats: MarkdownFormat.MULTI_QUOTE | MarkdownFormat.QUOTE) -> str:
+def remove_quote(content: str, formats: MarkdownFormat) -> str:
     """
     Helper function to remove quote formatting.
 
@@ -225,6 +225,7 @@ def remove_quote(content: str, formats: MarkdownFormat.MULTI_QUOTE | MarkdownFor
     if formats == MarkdownFormat.QUOTE and content.startswith("> "):
         content = content[2:]
     return content
+
 
 # MIT License
 #
