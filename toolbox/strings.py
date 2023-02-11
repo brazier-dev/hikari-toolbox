@@ -73,19 +73,18 @@ class MarkdownFormat(IntFlag):
 
 
 FORMAT_DICT = {
-    # First value is the regex pattern of the affiliated enum flag, the match is WITHOUT the formatting that causes it.
-    # Second value is the string that is being replaced in the originally sent string by the match alone.
-    # {0} is a placeholder for the match.
-    MarkdownFormat.MULTI_QUOTE: (re.compile(r"\s*>{3} ([\s\S]+)"),  ">>> {0}"),
-    MarkdownFormat.QUOTE: (re.compile(r"\s*> ([\s\S]+)"),           "> {0}"),
-    MarkdownFormat.MULTI_CODE_BLOCK: (re.compile(r"`{3}([^`]+)`{3}"), "```{0}```"),
-    MarkdownFormat.CODE_BLOCK: (re.compile(r"`([^`]+)`"),           "`{0}`"),
-    MarkdownFormat.BOLD: (re.compile(r"\*{2}([^*]+)\*{2}"),         "\*\*{0}\*\*"),
-    MarkdownFormat.UNDERLINE: (re.compile(r"__([^_]+)__"),          "__{0}__"),
-    MarkdownFormat.STRIKETHROUGH: (re.compile(r"~~([\S\s]+)~~"),    "~~{0}~~"),
-    MarkdownFormat.ITALIC_UNDERSCORE: (re.compile(r"_([^_]+)_"),    "_{0}_"),
-    MarkdownFormat.ITALIC_ASTERISK: (re.compile(r"\*([^*]+)\*"),    "\*{0}\*"),
-    MarkdownFormat.SPOILER: (re.compile(r"\|{2}([^|]+)\|{2}"),      "\|\|{0}\|\|"),
+    # First value is the regex pattern of the affiliated enum flag, the match includes the formatting that causes it.
+    # Second value is the amount of characters that will be sliced off the match.
+    MarkdownFormat.MULTI_CODE_BLOCK: (re.compile(r"(`{3}[^`]+`{3})"), 3),
+    MarkdownFormat.CODE_BLOCK: (re.compile(r"(`[^`]+`)"), 1),
+    MarkdownFormat.MULTI_QUOTE: (re.compile(r"\s*>{3} ([\s\S]+)"), 0),
+    MarkdownFormat.QUOTE: (re.compile(r"\s*> ([\s\S]+)"), 0),
+    MarkdownFormat.BOLD: (re.compile(r"(\*{2}[^*]+\*{2})"), 2),
+    MarkdownFormat.UNDERLINE: (re.compile(r"(__[^_]+__)"), 2),
+    MarkdownFormat.STRIKETHROUGH: (re.compile(r"(~~[^~]+~~)"), 2),
+    MarkdownFormat.ITALIC_UNDERSCORE: (re.compile(r"(_[^_]+_)"), 1),
+    MarkdownFormat.ITALIC_ASTERISK: (re.compile(r"(\*[^*]+\*)"), 1),
+    MarkdownFormat.SPOILER: (re.compile(r"(\|{2}[^|]+\|{2})"), 2),
 }
 
 
@@ -195,13 +194,31 @@ def remove_markdown(content: str, formats: MarkdownFormat = MarkdownFormat.ALL) 
     str
         The cleaned string without markdown formatting.
     """
+    code_block_matches = []
     for format, (regex, replace) in FORMAT_DICT.items():
         if formats & format:
-            if format == MarkdownFormat.MULTI_QUOTE or format == MarkdownFormat.QUOTE:
-                content = remove_quote(content, format)
+            if format & MarkdownFormat.MULTI_CODE_BLOCK or format & MarkdownFormat.CODE_BLOCK:
+                code_block_matches += re.findall(regex, content)
             matches = re.findall(regex, content)
-            for match in matches:
-                content = re.sub(replace.format(match), match, content)
+            if not code_block_matches:
+                for match in matches:
+                    if format & MarkdownFormat.MULTI_QUOTE or format & MarkdownFormat.QUOTE:
+                        content = remove_quote(content, format)
+                        continue
+                    content = content.replace(match, match[replace:-replace], 1)
+            else:
+                for match in matches:
+                    if format & MarkdownFormat.MULTI_CODE_BLOCK or format & MarkdownFormat.CODE_BLOCK:
+                        content = content.replace(match, match[replace:-replace], 1)
+                        continue
+                    else:
+                        ignore = False
+                        for code_block_match in code_block_matches:
+                            if match in code_block_match:
+                                ignore = True
+                        if not ignore:
+                            content = content.replace(match, match[replace:-replace], 1)
+
     return content
 
 
