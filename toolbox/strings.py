@@ -203,7 +203,7 @@ def remove_markdown(content: str, formats: MarkdownFormat = MarkdownFormat.ALL) 
             if not code_block_matches:
                 for match in matches:
                     if format & MarkdownFormat.MULTI_QUOTE or format & MarkdownFormat.QUOTE:
-                        content = remove_quote(content, format)
+                        content = _remove_quote(content, format)
                         continue
                     content = content.replace(match, match[replace:-replace], 1)
             else:
