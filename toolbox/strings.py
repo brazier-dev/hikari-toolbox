@@ -222,7 +222,7 @@ def remove_markdown(content: str, formats: MarkdownFormat = MarkdownFormat.ALL) 
     return content
 
 
-def remove_quote(content: str, formats: MarkdownFormat) -> str:
+def _remove_quote(content: str, formats: MarkdownFormat) -> str:
     """
     Helper function to remove quote formatting.
 
