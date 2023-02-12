@@ -1,8 +1,16 @@
 import datetime
 import re
 import typing as t
+from enum import IntFlag
 
-__all__: t.Sequence[str] = ("format_dt", "utcnow", "is_url", "is_invite")
+__all__: t.Sequence[str] = (
+    "format_dt",
+    "utcnow",
+    "is_url",
+    "is_invite",
+    "remove_markdown",
+    "MarkdownFormat",
+)
 
 VALID_TIMESTAMP_STYLES: t.Sequence[str] = ("t", "T", "d", "D", "f", "F", "R")
 
@@ -11,6 +19,73 @@ LINK_REGEX = re.compile(
     r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)"
 )
 INVITE_REGEX = re.compile(r"(?:https?://)?discord(?:app)?\.(?:com/invite|gg)/[a-zA-Z0-9]+/?")
+
+
+class MarkdownFormat(IntFlag):
+    """An Enum to flag strings with the types of formatting that should be removed."""
+
+    NONE = 0
+    """Refers to no formatting."""
+
+    STRIKETHROUGH = 1 << 0
+    """Used to remove strikethroughs caused by 2 tildes."""
+
+    ITALIC_UNDERSCORE = 1 << 1
+    """Used to remove italic caused by underscores."""
+
+    ITALIC_ASTERISK = 1 << 2
+    """Used to remove italic caused by asterisks."""
+
+    BOLD = 1 << 3
+    """Used to remove bold caused by 2 asterisks."""
+
+    UNDERLINE = 1 << 4
+    """Used to remove underlining caused by 2 underscores."""
+
+    CODE_BLOCK = 1 << 5
+    """Used to remove code blocks caused by backticks."""
+
+    MULTI_CODE_BLOCK = 1 << 6
+    """Used to remove multiline code blocks caused by 3 backticks."""
+
+    QUOTE = 1 << 7
+    """Used to remove quotes caused by a bigger than at the start of the line followed by a whitespace character."""
+
+    MULTI_QUOTE = 1 << 8
+    """Used to remove multiline quotes caused by 3 bigger thans at the start of the line followed by a whitespace character."""
+
+    SPOILER = 1 << 9
+    """Used to remove spoilers caused by 2 pipes."""
+
+    ALL = (
+        STRIKETHROUGH
+        | ITALIC_UNDERSCORE
+        | ITALIC_ASTERISK
+        | BOLD
+        | UNDERLINE
+        | CODE_BLOCK
+        | MULTI_CODE_BLOCK
+        | QUOTE
+        | MULTI_QUOTE
+        | SPOILER
+    )
+    """Used to remove all possible formatting."""
+
+
+FORMAT_DICT = {
+    # First value is the regex pattern of the affiliated enum flag, the match includes the formatting that causes it.
+    # Second value is the amount of characters that will be sliced off the match.
+    MarkdownFormat.MULTI_CODE_BLOCK: (re.compile(r"(`{3}[^`]+`{3})"), 3),
+    MarkdownFormat.CODE_BLOCK: (re.compile(r"(`[^`]+`)"), 1),
+    MarkdownFormat.MULTI_QUOTE: (re.compile(r"\s*>{3} ([\s\S]+)"), 0),
+    MarkdownFormat.QUOTE: (re.compile(r"\s*> ([\s\S]+)"), 0),
+    MarkdownFormat.BOLD: (re.compile(r"(\*{2}[^*]+\*{2})"), 2),
+    MarkdownFormat.UNDERLINE: (re.compile(r"(__[^_]+__)"), 2),
+    MarkdownFormat.STRIKETHROUGH: (re.compile(r"(~~[^~]+~~)"), 2),
+    MarkdownFormat.ITALIC_UNDERSCORE: (re.compile(r"(_[^_]+_)"), 1),
+    MarkdownFormat.ITALIC_ASTERISK: (re.compile(r"(\*[^*]+\*)"), 1),
+    MarkdownFormat.SPOILER: (re.compile(r"(\|{2}[^|]+\|{2})"), 2),
+}
 
 
 def format_dt(time: datetime.datetime, style: t.Optional[str] = None) -> str:
@@ -100,6 +175,77 @@ def is_invite(string: str, *, fullmatch: bool = True) -> bool:
         return True
 
     return False
+
+
+def remove_markdown(content: str, formats: MarkdownFormat = MarkdownFormat.ALL) -> str:
+    """
+    Removes the markdown formatting from Discord messages.
+
+    Parameters
+    ----------
+    content : str
+        The `str` object, which needs their content cleaned from Discord's markdown formatting.
+    formats : MarkdownFormat
+        The `IntFlag` of the formatting that needs to be removed.
+        Default is `MarkdownFormat.ALL`.
+        Multiple can be supplied by using bitwise OR.
+        Matches for `MarkdownFormat.MULTI_CODE_BLOCK` and `MarkdownFormat.CODE_BLOCK`
+        don't remove other formatting found inside them.
+
+    Returns
+    -------
+    str
+        The cleaned string without markdown formatting.
+    """
+    code_block_matches = []
+    for format, (regex, replace) in FORMAT_DICT.items():
+        if formats & format:
+            if format & MarkdownFormat.MULTI_CODE_BLOCK or format & MarkdownFormat.CODE_BLOCK:
+                code_block_matches += re.findall(regex, content)
+            matches = re.findall(regex, content)
+            if not code_block_matches:
+                for match in matches:
+                    if format & MarkdownFormat.MULTI_QUOTE or format & MarkdownFormat.QUOTE:
+                        content = _remove_quote(content, format)
+                        continue
+                    content = content.replace(match, match[replace:-replace], 1)
+            else:
+                for match in matches:
+                    if format & MarkdownFormat.MULTI_CODE_BLOCK or format & MarkdownFormat.CODE_BLOCK:
+                        content = content.replace(match, match[replace:-replace], 1)
+                        continue
+                    else:
+                        ignore = False
+                        for code_block_match in code_block_matches:
+                            if match in code_block_match:
+                                ignore = True
+                        if not ignore:
+                            content = content.replace(match, match[replace:-replace], 1)
+
+    return content
+
+
+def _remove_quote(content: str, formats: MarkdownFormat) -> str:
+    """
+    Helper function to remove quote formatting.
+
+    Parameters
+    ----------
+    content : str
+        The `str` object, which needs to be cleaned from quote formatting.
+    format : MarkdownFormat
+        The type of quote formatting that needs to be removed.
+
+    Returns
+    -------
+    str
+        The cleaned string without quote formatting.
+    """
+    if formats == MarkdownFormat.MULTI_QUOTE and ">>> " in content:
+        content = content.replace(">>> ", "")
+    if formats == MarkdownFormat.QUOTE and "> " in content:
+        content = content.replace("> ", "")
+    return content
 
 
 # MIT License
