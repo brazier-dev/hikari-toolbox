@@ -186,8 +186,11 @@ def remove_markdown(content: str, formats: MarkdownFormat = MarkdownFormat.ALL) 
     content : str
         The `str` object, which needs their content cleaned from Discord's markdown formatting.
     formats : MarkdownFormat
-        The `IntFlag` of the formatting that needs to be removed. Default is `MarkdownFormat.ALL`
+        The `IntFlag` of the formatting that needs to be removed.
+        Default is `MarkdownFormat.ALL`.
         Multiple can be supplied by using bitwise OR.
+        Matches for `MarkdownFormat.MULTI_CODE_BLOCK` and `MarkdownFormat.CODE_BLOCK`
+        don't remove other formatting found inside them.
 
     Returns
     -------
