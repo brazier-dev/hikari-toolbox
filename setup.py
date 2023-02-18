@@ -44,7 +44,7 @@ setup(
     long_description_content_type="text/markdown",
     author="HyperGH",
     author_email="46067571+HyperGH@users.noreply.github.com",
-    url="https://github.com/HyperGH/hikari-toolbox",
+    url="https://github.com/brazier-dev/hikari-toolbox",
     packages=find_namespace_packages(include=[name + "*"]),
     package_data={"toolbox": ["py.typed"]},
     license="MIT",
