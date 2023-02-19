@@ -37,14 +37,14 @@ def get_member_color(member: hikari.Member) -> hikari.Color:
 def is_above(member1: hikari.Member, member2: hikari.Member) -> bool:
     """
     Returns True if member1's top role's position is higher than member2's.
-    
+
     Parameters
     ----------
     member1 : hikari.Member
         The first member to compare.
     member2 : hikari.Member
         The second member to compare.
-        
+
     Returns
     -------
     bool
