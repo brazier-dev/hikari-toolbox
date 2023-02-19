@@ -56,7 +56,11 @@ def is_above(member1: hikari.Member, member2: hikari.Member) -> bool:
     if not member1_top_role or not member2_top_role:
         raise CacheFailureError("Some objects could not be resolved from cache.")
 
-    return member1_top_role.position > member2_top_role.position
+    return (
+        member1_top_role.position > member2_top_role.position
+        if member1_top_role.position != member2_top_role.position
+        else member1_top_role.id < member2_top_role.id
+    )
 
 
 def get_possessive(user: hikari.User) -> str:
