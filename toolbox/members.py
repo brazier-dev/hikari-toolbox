@@ -59,7 +59,7 @@ def is_above(member1: hikari.Member, member2: hikari.Member) -> bool:
     return (
         member1_top_role.position > member2_top_role.position
         if member1_top_role.position != member2_top_role.position
-        else member1_top_role.id > member2_top_role.id
+        else member1_top_role.id < member2_top_role.id
     )
 
 
