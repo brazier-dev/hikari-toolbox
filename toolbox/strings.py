@@ -1,10 +1,11 @@
 import datetime
 import re
 import typing as t
-from enum import IntFlag
+from enum import Enum, IntFlag
 
 __all__: t.Sequence[str] = (
     "format_dt",
+    "TimestampStyle",
     "utcnow",
     "is_url",
     "is_invite",
@@ -12,13 +13,34 @@ __all__: t.Sequence[str] = (
     "MarkdownFormat",
 )
 
-VALID_TIMESTAMP_STYLES: t.Sequence[str] = ("t", "T", "d", "D", "f", "F", "R")
-
 
 LINK_REGEX = re.compile(
     r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)"
 )
 INVITE_REGEX = re.compile(r"(?:https?://)?discord(?:app)?\.(?:com/invite|gg)/[a-zA-Z0-9]+/?")
+
+
+class TimestampStyle(str, Enum):
+    """Enum of Discord timestamp styles"""
+
+    RELATIVE = "R"
+    """Ex: 3 minutes ago"""
+    SHORT_TIME = "t"
+    """Ex: 3:50 PM"""
+    LONG_TIME = "T"
+    """Ex: 3:50:25 PM"""
+    SHORT_DATE = "d"
+    """Ex: 2/16/23"""
+    LONG_DATE = "D"
+    """Ex: February 16, 2023"""
+    LONG_DATE_SHORT_TIME = "f"
+    """Ex: February 16, 2023 at 3:50 PM"""
+    LONG_DATE_WITH_DOW_SHORT_TIME = "F"
+    """Ex: Thursday, February 16, 2023, at 3:50 PM"""
+
+    # Method to replicate Python 3.11's StrEnum
+    def __str__(self) -> str:
+        return self.value
 
 
 class MarkdownFormat(IntFlag):
@@ -88,7 +110,7 @@ FORMAT_DICT = {
 }
 
 
-def format_dt(time: datetime.datetime, style: t.Optional[str] = None) -> str:
+def format_dt(time: datetime.datetime, style: t.Optional[TimestampStyle] = None) -> str:
     """
     Convert a datetime into a Discord timestamp.
     For styling see this link: https://discord.com/developers/docs/reference#message-formatting-timestamp-styles
@@ -97,7 +119,7 @@ def format_dt(time: datetime.datetime, style: t.Optional[str] = None) -> str:
     ----------
     time : datetime.datetime
         The datetime to convert.
-    style : str, optional
+    style : TimestampStyle, optional
         The style to use for the timestamp, by default None.
 
     Returns
@@ -105,9 +127,6 @@ def format_dt(time: datetime.datetime, style: t.Optional[str] = None) -> str:
     str
         The formatted timestamp.
     """
-
-    if style and style not in VALID_TIMESTAMP_STYLES:
-        raise ValueError(f"Invalid style passed. Valid styles: {' '.join(VALID_TIMESTAMP_STYLES)}")
 
     if style:
         return f"<t:{int(time.timestamp())}:{style}>"
