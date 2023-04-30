@@ -33,6 +33,9 @@ def make_role(
         bot_id=None,
         integration_id=False,
         is_premium_subscriber_role=None,
+        subscription_listing_id=None,
+        is_available_for_purchase=None,
+        is_guild_linked_role=None,
     )
 
 
