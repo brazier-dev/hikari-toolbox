@@ -1,5 +1,6 @@
 from .commands import *
 from .errors import *
+from .events import *
 from .members import *
 from .messages import *
 from .roles import *
