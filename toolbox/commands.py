@@ -26,33 +26,27 @@ def _list_to_command_choices(
 
 
 @t.overload
-def as_command_choices(choices: t.Sequence[ChoiceTypes]) -> t.Sequence[hikari.CommandChoice]:
-    ...
+def as_command_choices(choices: t.Sequence[ChoiceTypes]) -> t.Sequence[hikari.CommandChoice]: ...
 
 
 @t.overload
-def as_command_choices(choices: t.Sequence[t.Sequence[ChoiceTypes]]) -> t.Sequence[hikari.CommandChoice]:
-    ...
+def as_command_choices(choices: t.Sequence[t.Sequence[ChoiceTypes]]) -> t.Sequence[hikari.CommandChoice]: ...
 
 
 @t.overload
-def as_command_choices(choices: t.Dict[str, ChoiceTypes]) -> t.Sequence[hikari.CommandChoice]:
-    ...
+def as_command_choices(choices: t.Dict[str, ChoiceTypes]) -> t.Sequence[hikari.CommandChoice]: ...
 
 
 @t.overload
-def as_command_choices(*args: ChoiceTypes) -> t.Sequence[hikari.CommandChoice]:
-    ...
+def as_command_choices(*args: ChoiceTypes) -> t.Sequence[hikari.CommandChoice]: ...
 
 
 @t.overload
-def as_command_choices(*args: t.Sequence[ChoiceTypes]) -> t.Sequence[hikari.CommandChoice]:
-    ...
+def as_command_choices(*args: t.Sequence[ChoiceTypes]) -> t.Sequence[hikari.CommandChoice]: ...
 
 
 @t.overload
-def as_command_choices(**kwargs: ChoiceTypes) -> t.Sequence[hikari.CommandChoice]:
-    ...
+def as_command_choices(**kwargs: ChoiceTypes) -> t.Sequence[hikari.CommandChoice]: ...
 
 
 def as_command_choices(*args: t.Any, **kwargs: t.Any) -> t.Sequence[hikari.CommandChoice]:

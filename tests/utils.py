@@ -55,6 +55,7 @@ def make_member(roles: list[hikari.Role] = None):
         role_ids=[role.id for role in roles],
         user=None,
         guild_avatar_hash=None,
+        guild_flags=None,
     )
 
     GLOBAL_ROLES[id(member)] = roles
