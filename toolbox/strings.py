@@ -1,7 +1,8 @@
 import datetime
 import re
 import typing as t
-from enum import Enum, IntFlag
+from enum import Enum
+from enum import IntFlag
 
 __all__: t.Sequence[str] = (
     "format_dt",
